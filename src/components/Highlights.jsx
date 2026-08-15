@@ -24,7 +24,7 @@ const HIGHLIGHTS = [
     title: 'ምርጥ ሎኬሽኖች',
     body: (
       <>
-        በ<strong>ሳር ቤት አደባባይ</strong> እና በ<strong>መገናኛ ዲያስፖራ አደባባይ</strong> — ከ
+        በ<strong>ሳር ቤት አደባባይ</strong> እና በ<strong>መገናኛ ዲያስፖራ አደባባይ</strong> - ከ
         <strong>ስቱዲኦ (Studio)</strong> እስከ <strong>ባለ ሶስት መኝታ</strong>።
       </>
     ),
@@ -34,7 +34,7 @@ const HIGHLIGHTS = [
     title: 'የዋጋ ጭማሪ የለም',
     body: (
       <>
-        በቀሪ ክፍያ ላይ <strong>ምንም አይነት የዋጋ ጭማሪ የለም</strong> — ዋጋው እንደተስማማነው ይቆያል።
+        በቀሪ ክፍያ ላይ <strong>ምንም አይነት የዋጋ ጭማሪ የለም</strong> - ዋጋው እንደተስማማነው ይቆያል።
       </>
     ),
   },
@@ -53,7 +53,7 @@ const HIGHLIGHTS = [
     body: (
       <>
         በ<strong>ሳር ቤት</strong>፣ <strong>አፍሪካ ህብረት</strong> እና <strong>ፒያሳ አደባባይ</strong>{' '}
-        — ከ<strong>1,400,000 ብር</strong> ቅድመ ክፍያ ጀምሮ።
+        - ከ<strong>1,400,000 ብር</strong> ቅድመ ክፍያ ጀምሮ።
       </>
     ),
   },
@@ -63,7 +63,7 @@ export default function Highlights() {
   return (
     <>
       <h2 className="section-title">ለምን ከእኛ ይግዙ?</h2>
-      <p className="section-sub">ቴምር ሪል እስቴት — በ10 ዓመት 11 ፕሮጀክት ጥንቅቅ አድርገን አስረክበናል።</p>
+      <p className="section-sub">ቴምር ሪል እስቴት - በ10 ዓመት 11 ፕሮጀክት ጥንቅቅ አድርገን አስረክበናል።</p>
       <div className="grid">
         {HIGHLIGHTS.map((item) => (
           <div className="card" key={item.title}>

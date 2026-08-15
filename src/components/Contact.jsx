@@ -2,7 +2,7 @@ export default function Contact() {
   return (
     <section className="contact">
       <h2 className="section-title">ለበለጠ መረጃ ያግኙን</h2>
-      <p className="section-sub">ወንደሰን — የሽያጭ አማካሪ</p>
+      <p className="section-sub">ወንደሰን - የሽያጭ አማካሪ</p>
       <div className="contact-buttons">
         <a className="btn btn-phone" href="tel:+251941255153">
           📞 +251 94 125 5153
@@ -21,11 +21,11 @@ export default function Contact() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          ✈️ Telegram — @wendii02
+          ✈️ Telegram - @wendii02
         </a>
       </div>
       <p className="agent-note">
-        ሙሉ ድረ-ገጻችን በግንባታ ላይ ነው — እስከዚያው በስልክ፣ በ WhatsApp ወይም በ Telegram ያግኙን።
+        ሙሉ ድረ-ገጻችን በግንባታ ላይ ነው - እስከዚያው በስልክ፣ በ WhatsApp ወይም በ Telegram ያግኙን።
       </p>
     </section>
   )

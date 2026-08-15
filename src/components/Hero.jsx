@@ -9,11 +9,11 @@ export default function Hero() {
           የቤት ባለቤት መሆን ይችላሉ!
         </h1>
         <p className="hero-sub">
-          የቤቱን 40% ብቻ ከፍለው ቀሪውን 60% ቤትዎን ሲረከቡ ይክፈሉ — በሳር ቤት አደባባይ እና በመገናኛ ዲያስፖራ
+          የቤቱን 40% ብቻ ከፍለው ቀሪውን 60% ቤትዎን ሲረከቡ ይክፈሉ - በሳር ቤት አደባባይ እና በመገናኛ ዲያስፖራ
           አደባባይ።
         </p>
         <div className="coming-soon">
-          <span className="dot" /> ሙሉ ድረ-ገጻችን በቅርቡ ይመጣል — Full website coming soon
+          <span className="dot" /> ሙሉ ድረ-ገጻችን በቅርቡ ይመጣል - Full website coming soon
         </div>
       </div>
     </header>
