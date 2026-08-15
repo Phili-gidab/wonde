@@ -1,0 +1,5 @@
+export const PHONE = '+251 94 125 5153'
+export const PHONE_TEL = 'tel:+251941255153'
+export const WHATSAPP = 'https://wa.me/251941255153'
+export const TELEGRAM = 'https://t.me/wendii02'
+export const AGENT = 'ወንደሰን'
