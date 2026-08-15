@@ -1,8 +1,10 @@
 export default function Footer() {
   return (
     <footer>
-      <div>© 2026 - ሁሉም መብቶች የተጠበቁ ናቸው። ድረ-ገጹ በግንባታ ላይ ነው።</div>
-      <div className="en">Website under construction - full experience coming soon.</div>
+      <div className="wrap">
+        <span>ቴምር ሪል እስቴት</span>
+        <span className="muted">© 2026 ሁሉም መብቶች የተጠበቁ ናቸው።</span>
+      </div>
     </footer>
   )
 }

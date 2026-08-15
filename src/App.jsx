@@ -1,20 +1,18 @@
-import ConstructionBanner from './components/ConstructionBanner.jsx'
+import Notice from './components/Notice.jsx'
 import Hero from './components/Hero.jsx'
-import Highlights from './components/Highlights.jsx'
-import TrustStrip from './components/TrustStrip.jsx'
+import Features from './components/Features.jsx'
+import Commercial from './components/Commercial.jsx'
 import Contact from './components/Contact.jsx'
 import Footer from './components/Footer.jsx'
 
 export default function App() {
   return (
     <>
-      <ConstructionBanner />
+      <Notice />
       <Hero />
-      <main className="wrap">
-        <Highlights />
-        <TrustStrip />
-        <Contact />
-      </main>
+      <Features />
+      <Commercial />
+      <Contact />
       <Footer />
     </>
   )
