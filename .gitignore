@@ -2,3 +2,10 @@ node_modules/
 dist/
 .vercel/
 *.local
+
+# Source + intermediate 3D models (see README "3D model pipeline").
+# The built artefact public/models/tower.glb IS committed - it ships to prod.
+models-src/
+
+# Render-check output from scripts/shoot.mjs
+shots/
