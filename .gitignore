@@ -9,3 +9,7 @@ models-src/
 
 # Render-check output from scripts/shoot.mjs
 shots/
+
+# Original social-post images. Processed into public/posts/ by
+# scripts/media/posts.mjs; the generated WebPs ARE committed.
+media-src/

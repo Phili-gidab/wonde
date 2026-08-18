@@ -1,9 +1,10 @@
 /**
  * All site copy lives here.
  *
- * Language treatment: English primary, Amharic as display accent. Every
- * chapter carries an `am` line under the English heading, so the page reads to
- * a diaspora buyer in English while staying rooted for local buyers.
+ * Every translatable value is an `{ en, am }` pair, resolved through `t()` in
+ * src/i18n.jsx. Whichever language is active, the *other* one is rendered
+ * underneath the heading as an amber display accent - so the page reads as a
+ * bilingual object rather than as a translation of itself.
  *
  * Figures come from Wonde's own sales material. Keep them here rather than
  * inline in components - they change often and one file is easier to hand to a
@@ -11,99 +12,169 @@
  */
 
 export const BRAND = {
-  en: 'Temer Real Estate',
-  am: 'ቴምር ሪል እስቴት',
+  name: { en: 'Temer Real Estate', am: 'ቴምር ሪል እስቴት' },
   mark: 'TEMER',
+}
+
+export const UI = {
+  callWonde: { en: 'Call Wonde', am: 'ወንደሰንን ይደውሉ' },
+  callNow: { en: 'Call now', am: 'አሁኑኑ ይደውሉ' },
+  scroll: { en: 'Scroll', am: 'ወደ ታች' },
+  salesConsultant: { en: 'Sales consultant', am: 'የሽያጭ አማካሪ' },
+  chapters: { en: 'Chapters', am: 'ክፍሎች' },
+  whatYouGet: { en: 'What you get', am: 'የሚያገኙት' },
+  askAboutUnit: { en: 'Ask Wonde about a unit', am: 'ስለ ሱቅ ወንደሰንን ይጠይቁ' },
+  allFiguresBirr: { en: 'All figures in birr.', am: 'ሁሉም ዋጋዎች በብር ናቸው።' },
+  rightsReserved: {
+    en: 'All rights reserved.',
+    am: 'ሁሉም መብቶች የተጠበቁ ናቸው።',
+  },
+  handedOver: { en: "Handed over", am: "ተረክቧል" },
+  offerNow: { en: "Offer", am: "ቅናሽ" },
+  prev: { en: 'Previous', am: 'ወደ ኋላ' },
+  next: { en: 'Next', am: 'ወደ ፊት' },
+  trueColour: { en: "Tap a card for its real colours", am: "ትክክለኛ ቀለም ለማየት ካርዱን ይንኩ" },
+  viewHomes: { en: "See homes", am: "ቤቶችን ይመልከቱ" },
+  viewShops: { en: "See shops", am: "ሱቆችን ይመልከቱ" },
+  unitTable: {
+    floor: { en: 'Floor', am: 'ፎቅ' },
+    size: { en: 'Size', am: 'ስፋት' },
+    price: { en: 'Total price', am: 'ጠቅላላ ዋጋ' },
+    down: { en: 'Down payment', am: 'ቅድመ ክፍያ' },
+  },
+  modelCredit: {
+    prefix: { en: '3D model', am: 'የ3D ሞዴል' },
+    by: { en: 'by', am: 'በ' },
+    licensed: { en: 'licensed under', am: 'በፍቃድ' },
+  },
 }
 
 /**
  * Five chapters, each a composed shot rather than a hard scene change.
+ *
  * `camera` drives the rig in src/three/cameraPath.js; positions are in
  * normalised units where the tower is 10 high and stands on y = 0.
+ * `cameraMobile` is a separate portrait framing - three.js `fov` is vertical,
+ * so desktop keyframes overflow a phone badly. Verify any change with
+ * `node scripts/framing.mjs`.
  */
 export const CHAPTERS = [
   {
     id: 'arrival',
     no: '01',
-    label: 'Arrival',
-    labelAm: 'መግቢያ',
-    heading: 'A home in Addis,\nwithout the wait.',
-    am: 'በአዲስ አበባ የቤት ባለቤት ይሁኑ።',
-    body:
-      'Apartments at Sarbet Adebabay and Megenagna Diaspora Adebabay, from ' +
-      'studio to three bedroom. Handed over complete, on schedule.',
+    label: { en: 'Arrival', am: 'መግቢያ' },
+    heading: {
+      en: 'A home in Addis,\nwithout the wait.',
+      am: 'በአዲስ አበባ\nየቤት ባለቤት ይሁኑ።',
+    },
+    body: {
+      en:
+        'Apartments at Sarbet Adebabay and Megenagna Diaspora Adebabay, from ' +
+        'studio to three bedroom. Handed over complete, on schedule.',
+      am:
+        'በሳር ቤት አደባባይ እና በመገናኛ ዲያስፖራ አደባባይ፤ ከስቱዲኦ እስከ ባለ ሶስት መኝታ። ' +
+        'ጥንቅቅ ተደርገው በጊዜው ይረከባሉ።',
+    },
     camera: {
       position: [7.5, 2.0, 15.5],
       target: [0, 4.2, 0],
       fov: 42,
     },
+    cameraMobile: {
+      position: [8.03, 4.5, 17.39],
+      target: [0, 5.5, 0],
+      fov: 52,
+    },
   },
   {
     id: 'offer',
     no: '02',
-    label: 'The offer',
-    labelAm: 'ዋጋው',
-    heading: '4.6 million birr,\nall in.',
-    am: 'በ4.6 ሚልዮን ብር ጠቅላላ ክፍያ ብቻ የቤት ባለቤት ይሁኑ።',
-    body:
-      'Pay 40% to secure the unit. The remaining 60% is due only when you take ' +
-      'the keys - and there is no price increase on the balance.',
+    label: { en: 'The offer', am: 'ዋጋው' },
+    heading: {
+      en: '4.6 million birr,\nall in.',
+      am: 'በ4.6 ሚልዮን ብር\nጠቅላላ ክፍያ ብቻ።',
+    },
+    body: {
+      en:
+        'Pay 40% to secure the unit. The remaining 60% is due only when you take ' +
+        'the keys - and there is no price increase on the balance.',
+      am:
+        'የቤቱን 40% ብቻ ከፍለው ቤትዎን ያስይዙ። ቀሪውን 60% ቤትዎን ሲረከቡ ይክፈሉ - ' +
+        'በቀሪው ክፍያ ላይ ምንም አይነት የዋጋ ጭማሪ አይደረግም።',
+    },
     stats: [
-      { value: '40%', label: 'On signing', am: 'ቅድመ ክፍያ' },
-      { value: '60%', label: 'On handover', am: 'ቤትዎን ሲረከቡ' },
-      { value: '35%', label: 'Max discount', am: 'እስከዚህ ቅናሽ' },
+      { value: '40%', label: { en: 'On signing', am: 'ቅድመ ክፍያ' } },
+      { value: '60%', label: { en: 'On handover', am: 'ቤትዎን ሲረከቡ' } },
+      { value: '35%', label: { en: 'Max discount', am: 'እስከዚህ ቅናሽ' } },
     ],
     camera: {
       position: [10.5, 6.5, 10.0],
       target: [0, 5.6, 0],
       fov: 40,
     },
+    cameraMobile: {
+      position: [11.2, 7.09, 15.38],
+      target: [0, 5, 0],
+      fov: 52,
+    },
   },
   {
-    id: 'residences',
+    id: 'feed',
     no: '03',
-    label: 'Residences',
-    labelAm: 'መኖሪያ ቤቶች',
-    heading: 'Studio to\nthree bedroom.',
-    am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ።',
-    body:
-      'Two live sites, both on a major roundabout. Gated compound houses are ' +
-      'available at up to 35% off.',
-    sites: [
-      {
-        name: 'Sarbet Adebabay',
-        am: 'ሳር ቤት አደባባይ',
-        size: '76 - 151 m²',
-        note: 'Up to 30% off',
-      },
-      {
-        name: 'Megenagna Diaspora Adebabay',
-        am: 'መገናኛ ዲያስፖራ አደባባይ',
-        size: '32 - 154 m²',
-        note: '130,000 birr / m² · up to 35% off',
-      },
-    ],
+    label: { en: 'Listings', am: 'ማስታወቂያዎች' },
+    heading: {
+      en: 'What’s selling\nright now.',
+      am: 'አሁን በሽያጭ\nላይ ያለው።',
+    },
+    body: {
+      en:
+        'The offers running at Sarbet and Megenagna, and buildings already handed ' +
+        'over that you can go and stand in front of.',
+      am:
+        'በሳር ቤት እና በመገናኛ ያሉ ቅናሾች፣ እንዲሁም ተጠናቀው የተረከቡ ህንፃዎች።',
+    },
+    feed: true,
     camera: {
       position: [14.0, 5.0, 16.0],
       target: [0, 4.8, 0],
       fov: 38,
     },
+    cameraMobile: {
+      position: [10.03, 5.08, 17.39],
+      target: [0, 5.2, 0],
+      fov: 50,
+    },
   },
   {
     id: 'track-record',
     no: '04',
-    label: 'Track record',
-    labelAm: 'የስራ ልምድ',
-    heading: 'Eleven projects.\nTen years.',
-    am: 'በ10 ዓመት 11 ፕሮጀክት ጥንቅቅ አድርገን አስረክበናል።',
-    body:
-      'Delivered across Atena Tera, Ayat, Lebu and Lafto - and now a ShebaMiles ' +
-      'partner in our tenth anniversary year.',
+    label: { en: 'Track record', am: 'የስራ ልምድ' },
+    heading: {
+      en: 'Eleven projects.\nTen years.',
+      am: '11 ፕሮጀክት።\n10 ዓመት።',
+    },
+    body: {
+      en:
+        'Delivered across Atena Tera, Ayat, Lebu and Lafto - and now a ShebaMiles ' +
+        'partner in our tenth anniversary year.',
+      am:
+        'በአጤና ተራ፣ በአያት፣ በለቡ እና በላፍቶ አስረክበናል - በአስረኛ ዓመታችን የShebaMiles አጋር ሆነናል።',
+    },
     delivered: [
-      { name: 'AGT Trading', place: 'Atena Tera', detail: '2B+G+5', area: '603 m²' },
-      { name: 'MAW', place: 'Ayat', detail: 'B+G+11', area: '822 m²' },
-      { name: '2MA', place: 'Lebu', detail: 'B+G+9', area: '1,080 m²' },
-      { name: 'Mohammed.S', place: 'Lafto', detail: '2B+G+6', area: '750 m²' },
+      {
+        name: 'AGT Trading',
+        place: { en: 'Atena Tera', am: 'አጤና ተራ' },
+        detail: '2B+G+5',
+        area: '603 m²',
+      },
+      { name: 'MAW', place: { en: 'Ayat', am: 'አያት' }, detail: 'B+G+11', area: '822 m²' },
+      { name: '2MA', place: { en: 'Lebu', am: 'ለቡ' }, detail: 'B+G+9', area: '1,080 m²' },
+      {
+        name: 'Mohammed.S',
+        place: { en: 'Lafto', am: 'ላፍቶ' },
+        detail: '2B+G+6',
+        area: '750 m²',
+      },
     ],
     // Swings to the opposite side rather than climbing overhead. A top-down
     // shot at this point just showed the flat roof and its plant equipment.
@@ -112,30 +183,49 @@ export const CHAPTERS = [
       target: [0, 5.6, 0],
       fov: 40,
     },
+    cameraMobile: {
+      position: [-10.53, 7.68, 15.47],
+      target: [0, 4.5, 0],
+      fov: 52,
+    },
   },
   {
     id: 'contact',
     no: '05',
-    label: 'Speak to Wonde',
-    labelAm: 'ወንደሰንን ያግኙ',
-    heading: 'Talk to someone\nwho picks up.',
-    am: 'ለበለጠ መረጃ ወንደሰን።',
-    body:
-      'Wonde handles the whole process end to end - unit selection, payment ' +
-      'schedule and paperwork. Buying from abroad? Documents go out by DHL.',
+    label: { en: 'Speak to Wonde', am: 'ወንደሰንን ያግኙ' },
+    heading: {
+      en: 'Talk to someone\nwho picks up.',
+      am: 'ስልክ ለሚያነሳ\nሰው ይደውሉ።',
+    },
+    body: {
+      en:
+        'Wonde handles the whole process end to end - unit selection, payment ' +
+        'schedule and paperwork. Buying from abroad? Documents go out by DHL.',
+      am:
+        'ወንደሰን ከመጀመሪያ እስከ መጨረሻ ያስተናግድዎታል - ቤት መምረጥ፣ የክፍያ ሰሌዳ እና ሰነዶች። ' +
+        'ከሀገር ውጭ ነዎት? ሰነዶቹን ባሉበት በDHL እንልካለን።',
+    },
     camera: {
       position: [11.5, 4.0, 13.5],
       target: [0, 4.4, 0],
       fov: 41,
+    },
+    cameraMobile: {
+      position: [9.36, 4.85, 16.72],
+      target: [0, 5.6, 0],
+      fov: 52,
     },
   },
 ]
 
 /** Running strip under the chapters. */
 export const ASSURANCES = [
-  { en: 'No price increase on the balance', am: 'በቀሪ ክፍያ ላይ ጭማሪ የለም' },
-  { en: 'Gated compound, up to 35% off', am: 'ግቢ ቤት በቅናሽ' },
-  { en: 'DHL documents for diaspora', am: 'ለዲያስፖራ በDHL እንልካለን' },
+  {
+    en: 'No price increase on the balance',
+    am: 'በቀሪ ክፍያ ላይ ጭማሪ የለም',
+  },
+  { en: 'Gated compound, up to 35% off', am: 'ግቢ ቤት እስከ 35% ቅናሽ' },
+  { en: 'DHL documents for diaspora', am: 'ለዲያስፖራ ሰነድ በDHL' },
   { en: 'ShebaMiles partner', am: 'የShebaMiles አጋር' },
 ]
 
@@ -144,52 +234,194 @@ export const ASSURANCES = [
  * can find their budget without calling first.
  */
 export const COMMERCIAL = {
-  eyebrow: 'Commercial',
-  eyebrowAm: 'የንግድ ሱቆች',
-  heading: 'Own a shop.',
-  am: 'ዘመናዊ የንግድ ሱቆች',
-  body:
-    'Two retail developments now selling. 10% off for buyers paying 100% up ' +
-    'front on either.',
+  eyebrow: { en: 'Commercial', am: 'የንግድ ሱቆች' },
+  heading: { en: 'Own a shop.', am: 'የሱቅ ባለቤት ይሁኑ።' },
+  body: {
+    en:
+      'Two retail developments now selling. 10% off for buyers paying 100% up ' +
+      'front on either.',
+    am: 'ሁለት የንግድ ፕሮጀክቶች በሽያጭ ላይ። ሙሉ ክፍያ ለሚፈጽሙ 10% ቅናሽ።',
+  },
 
   projects: [
     {
       id: 'piyassa',
-      name: 'Piyassa - Adwa Museum',
-      am: 'መሃል ፒያሳ · አድዋ ሙዝየም ፊት ለፊት',
-      summary: '2 basements + G+5 retail centre, opposite the Adwa Museum and beside the main car park.',
+      name: { en: 'Piyassa - Adwa Museum', am: 'መሃል ፒያሳ · አድዋ ሙዝየም' },
+      summary: {
+        en: '2 basements + G+5 retail centre, opposite the Adwa Museum and beside the main car park.',
+        am: '2 ምድር ቤት + G+5 የገበያ ማዕከል፤ ከአድዋ ሙዝየም ፊት ለፊት እና ከዋናው መኪና ማቆሚያ አጠገብ።',
+      },
       facts: [
-        { k: 'Total price', v: '7,000,000 birr' },
-        { k: 'Down payment', v: '2,800,000 birr' },
-        { k: 'Balance', v: '10 instalments, interest free' },
-        { k: 'Handover', v: '1 year 6 months' },
+        { k: { en: 'Total price', am: 'ጠቅላላ ዋጋ' }, v: { en: '7,000,000 birr', am: '7,000,000 ብር' } },
+        {
+          k: { en: 'Down payment', am: 'ቅድመ ክፍያ' },
+          v: { en: '2,800,000 birr', am: '2,800,000 ብር' },
+        },
+        {
+          k: { en: 'Balance', am: 'ቀሪ ክፍያ' },
+          v: { en: '10 instalments, interest free', am: 'በ10 ክፍያ፣ ያለ ወለድ' },
+        },
+        {
+          k: { en: 'Handover', am: 'ርክክብ' },
+          v: { en: '1 year 6 months', am: 'በ1 ዓመት ከ6 ወር' },
+        },
       ],
       features: [
-        '6 escalators, 4 lifts',
-        'Shared terrace',
-        'Ground floor units',
-        'No dollar-linked increases',
+        { en: '6 escalators, 4 lifts', am: '6 ኤስካሌተር፣ 4 ሊፍት' },
+        { en: 'Shared terrace', am: 'የጋራ ቴራስ' },
+        { en: 'Ground floor units', am: 'የመሬት ወለል ሱቆች' },
+        { en: 'No dollar-linked increases', am: 'በዶላር ምክንያት ጭማሪ የለም' },
       ],
     },
     {
       id: 'kaliti',
-      name: 'Kaliti - Gelan',
-      am: 'ቃሊቲ (ገላን)',
-      summary:
-        'A wide modern mall in central Kaliti. Six sites already built and handed over.',
+      name: { en: 'Kaliti - Gelan', am: 'ቃሊቲ (ገላን)' },
+      summary: {
+        en: 'A wide modern mall in central Kaliti. Six sites already built and handed over.',
+        am: 'በቃሊቲ መሃል የሚገኝ ሰፊ ዘመናዊ ሞል። ስድስት ፕሮጀክቶች ተሰርተው ተረክበዋል።',
+      },
       // floor, size, total price, down payment
       units: [
-        { floor: 'Ground', size: '24 m²', price: '6,900,000', down: '3,000,000' },
-        { floor: 'Ground', size: '26 m²', price: '4,500,000', down: '2,000,000' },
-        { floor: 'Ground', size: '16 m²', price: '4,300,000', down: '1,800,000' },
-        { floor: '1st', size: '26.4 m²', price: '3,200,000', down: '1,200,000' },
-        { floor: '2nd', size: '26.8 m²', price: '2,800,000', down: '800,000' },
-        { floor: '3rd', size: '26.8 m²', price: '2,600,000', down: '600,000' },
-        { floor: '4th', size: '23.5 m²', price: '2,500,000', down: '500,000' },
+        { floor: { en: 'Ground', am: 'መሬት' }, size: '24 m²', price: '6,900,000', down: '3,000,000' },
+        { floor: { en: 'Ground', am: 'መሬት' }, size: '26 m²', price: '4,500,000', down: '2,000,000' },
+        { floor: { en: 'Ground', am: 'መሬት' }, size: '16 m²', price: '4,300,000', down: '1,800,000' },
+        { floor: { en: '1st', am: '1ኛ' }, size: '26.4 m²', price: '3,200,000', down: '1,200,000' },
+        { floor: { en: '2nd', am: '2ኛ' }, size: '26.8 m²', price: '2,800,000', down: '800,000' },
+        { floor: { en: '3rd', am: '3ኛ' }, size: '26.8 m²', price: '2,600,000', down: '600,000' },
+        { floor: { en: '4th', am: '4ኛ' }, size: '23.5 m²', price: '2,500,000', down: '500,000' },
       ],
     },
   ],
 }
+
+
+/**
+ * The two things Temer sells. Rendered as a pair so neither reads as a
+ * footnote to the other - homes were carrying the whole page before, and the
+ * shops were buried at the bottom.
+ */
+export const PILLARS = {
+  eyebrow: { en: 'Two things', am: 'ሁለት ነገሮች' },
+  heading: { en: 'Homes, and shops.', am: 'ቤቶች እና ሱቆች።' },
+  items: [
+    {
+      id: 'homes',
+      kind: { en: 'Homes', am: 'ቤቶች' },
+      lead: {
+        en: 'Studio to three bedroom, at two live sites on major roundabouts.',
+        am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ፤ በሁለት ዋና አደባባዮች ላይ።',
+      },
+      figures: [
+        { k: { en: 'Sizes', am: 'ስፋት' }, v: '32 - 154 m²' },
+        { k: { en: 'Rate', am: 'ዋጋ' }, v: { en: '130,000 birr / m²', am: '130,000 ብር በካሬ' } },
+        { k: { en: 'Discount', am: 'ቅናሽ' }, v: { en: 'up to 35%', am: 'እስከ 35%' } },
+      ],
+      sites: [
+        {
+          name: { en: 'Sarbet Adebabay', am: 'ሳር ቤት አደባባይ' },
+          size: '76 - 151 m²',
+          note: { en: 'Up to 30% off', am: 'እስከ 30% ቅናሽ' },
+        },
+        {
+          name: { en: 'Megenagna Diaspora Adebabay', am: 'መገናኛ ዲያስፖራ አደባባይ' },
+          size: '32 - 154 m²',
+          note: { en: 'Up to 35% off', am: 'እስከ 35% ቅናሽ' },
+        },
+      ],
+      href: '#offer',
+    },
+    {
+      id: 'shops',
+      kind: { en: 'Shops', am: 'ሱቆች' },
+      lead: {
+        en: 'Retail units in two developments, sold per floor with interest-free terms.',
+        am: 'በሁለት ፕሮጀክቶች ውስጥ ሱቆች፤ በፎቅ የሚሸጡ፣ ያለ ወለድ ክፍያ።',
+      },
+      figures: [
+        { k: { en: 'Sizes', am: 'ስፋት' }, v: '16 - 27 m²' },
+        { k: { en: 'From', am: 'ከ' }, v: { en: '500,000 birr down', am: '500,000 ብር ቅድመ ክፍያ' } },
+        { k: { en: 'Full payment', am: 'ሙሉ ክፍያ' }, v: { en: '10% off', am: '10% ቅናሽ' } },
+      ],
+      sites: [
+        {
+          name: { en: 'Piyassa - Adwa Museum', am: 'መሃል ፒያሳ · አድዋ ሙዝየም' },
+          size: '2B + G+5',
+          note: { en: '10 interest-free instalments', am: 'በ10 ክፍያ፣ ያለ ወለድ' },
+        },
+        {
+          name: { en: 'Kaliti - Gelan', am: 'ቃሊቲ (ገላን)' },
+          size: 'G+4',
+          note: { en: 'Per-floor pricing', am: 'በፎቅ ዋጋ' },
+        },
+      ],
+      href: '#commercial',
+    },
+  ],
+}
+
+/**
+ * Wonde's social posts, prepared by scripts/media/posts.mjs.
+ *
+ *  splits them into buildings already handed over (photographs) and
+ * offers currently running (poster artwork). The feed renders both in an amber
+ * duotone and reveals their true colours on hover or tap - see Feed.jsx.
+ */
+export const POSTS = [
+  {
+    id: 'post-01', kind: 'built', w: 1000, h: 520,
+    title: 'AGT Trading',
+    place: { en: 'Atena Tera', am: 'አጤና ተራ' },
+    detail: '2B+G+5 · 603 m²',
+  },
+  {
+    id: 'post-02', kind: 'built', w: 1000, h: 497,
+    title: 'MAW',
+    place: { en: 'Ayat', am: 'አያት' },
+    detail: 'B+G+11 · 822 m²',
+  },
+  {
+    id: 'post-03', kind: 'built', w: 1000, h: 497,
+    title: '2MA',
+    place: { en: 'Lebu', am: 'ለቡ' },
+    detail: 'B+G+9 · 1,080 m²',
+  },
+  {
+    id: 'post-04', kind: 'built', w: 1000, h: 837,
+    title: 'Mohammed.S',
+    place: { en: 'Lafto', am: 'ላፍቶ' },
+    detail: '2B+G+6 · 750 m²',
+  },
+  {
+    id: 'post-05', kind: 'offer', w: 1000, h: 1250,
+    title: { en: 'Sarbet', am: 'ሳር ቤት' },
+    place: { en: 'Luxury living centre', am: 'የቅንጦት ህይወት ማዕከል' },
+    detail: { en: '30% off', am: '30% ቅናሽ' },
+  },
+  {
+    id: 'post-06', kind: 'offer', w: 1000, h: 1250,
+    title: { en: 'Megenagna', am: 'መገናኛ' },
+    place: { en: 'New site now open', am: 'አዲስ ሳይት ተከፍቷል' },
+    detail: { en: '35% off · 32-154 m²', am: '35% ቅናሽ · 32-154 ካሬ' },
+  },
+  {
+    id: 'post-07', kind: 'offer', w: 1000, h: 1250,
+    title: { en: 'Sarbet Adebabay', am: 'ሳር ቤት አደባባይ' },
+    place: { en: 'Diplomat neighbourhood', am: 'ዲፕሎማት መንደር' },
+    detail: { en: '30% off', am: '30% ቅናሽ' },
+  },
+  {
+    id: 'post-08', kind: 'offer', w: 1000, h: 1250,
+    title: { en: 'Sarbet', am: 'ሳር ቤት' },
+    place: { en: 'By Adams Pavilion', am: 'ከአዳምስ ፓቪሊየን ጎን' },
+    detail: { en: '76-151 m² · 30% off', am: '76-151 ካሬ · 30% ቅናሽ' },
+  },
+  {
+    id: 'post-09', kind: 'offer', w: 1000, h: 1000,
+    title: { en: 'Sarbet', am: 'ሳር ቤት' },
+    place: { en: 'Studio to three bedroom', am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ' },
+    detail: { en: '76-151 m² · 30% off', am: '76-151 ካሬ · 30% ቅናሽ' },
+  },
+]
 
 /**
  * CC-BY attribution for the 3D model. Required by the licence - the model is

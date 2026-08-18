@@ -14,7 +14,8 @@ import { mkdir } from 'node:fs/promises'
 
 const URL = process.env.URL ?? 'http://localhost:4173/'
 const OUT = 'shots'
-const SHOTS = 6
+// Kept low deliberately: under software rendering each capture costs ~40s.
+const SHOTS = Number(process.env.SHOTS ?? 5)
 const VIEWPORTS = [
   { name: 'desktop', width: 1600, height: 900 },
   { name: 'mobile', width: 390, height: 844 },
@@ -78,12 +79,12 @@ for (const viewport of VIEWPORTS) {
     await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), y)
     // let the camera damping settle and reveals finish
     await page.waitForTimeout(1400)
-    // `animations: 'disabled'` is required: the page has infinite CSS
-    // animations (the scroll hint sweep, the call-dot ping) and the default
-    // capture waits for them to settle, which never happens.
+    // Do NOT pass `animations: 'disabled'` here. It makes Playwright wait for
+    // animations to settle, and with the composer's MSAA under software
+    // rendering the page never produces frames fast enough - the capture just
+    // times out. The default ('allow') screenshots immediately.
     await page.screenshot({
       path: `${OUT}/${viewport.name}-${i}.png`,
-      animations: 'disabled',
       caret: 'hide',
       timeout: 60_000,
     })

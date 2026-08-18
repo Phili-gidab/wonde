@@ -1,6 +1,9 @@
-import { CHAPTERS, ASSURANCES, COMMERCIAL } from '../content.js'
+import { CHAPTERS, ASSURANCES, COMMERCIAL, UI } from '../content.js'
 import { PHONE, PHONE_TEL, WHATSAPP, TELEGRAM, AGENT, AGENT_EN } from '../contact.js'
+import { useLang } from '../i18n.jsx'
 import PhoneIcon from './PhoneIcon.jsx'
+import Feed from './Feed.jsx'
+import Pillars from './Pillars.jsx'
 
 /**
  * The scroll track. Each chapter is one viewport tall; the fixed WebGL canvas
@@ -20,6 +23,8 @@ function Heading({ text }) {
 }
 
 function ContactBlock() {
+  const { t, lang } = useLang()
+
   return (
     <div className="ch-contact">
       <a className="phone-plate" href={PHONE_TEL}>
@@ -27,15 +32,16 @@ function ContactBlock() {
           <PhoneIcon size={22} />
         </span>
         <span className="phone-plate-body">
-          <span className="phone-plate-label">Call now</span>
+          <span className="phone-plate-label">{t(UI.callNow)}</span>
           <span className="phone-plate-num">{PHONE}</span>
         </span>
       </a>
 
       <p className="agent">
-        <span className="agent-name">{AGENT_EN}</span>
-        <span className="agent-am">{AGENT}</span>
-        <span className="agent-role">Sales consultant</span>
+        {/* The agent's name leads in whichever script the reader is using. */}
+        <span className="agent-name">{lang === 'am' ? AGENT : AGENT_EN}</span>
+        <span className="agent-am">{lang === 'am' ? AGENT_EN : AGENT}</span>
+        <span className="agent-role">{t(UI.salesConsultant)}</span>
       </p>
 
       <div className="actions">
@@ -51,29 +57,35 @@ function ContactBlock() {
 }
 
 function Chapter({ data, active }) {
-  const { no, label, labelAm, heading, am, body, stats, sites, delivered } = data
+  const { t, other } = useLang()
+  const { no, label, heading, body, stats, sites, delivered } = data
 
   return (
-    <section id={data.id} className={`ch${active ? ' is-active' : ''}`} aria-label={label}>
+    <section id={data.id} className={`ch${active ? ' is-active' : ''}${data.feed ? ' ch-wide' : ''}`} aria-label={t(label)}>
       <div className="ch-inner">
         <p className="ch-tag">
           <span className="ch-no">CH.{no}</span>
           <span className="ch-rule" />
-          <span className="ch-label">{label}</span>
-          <span className="ch-label-am">{labelAm}</span>
+          <span className="ch-label">{t(label)}</span>
+          <span className="ch-label-am">{other(label)}</span>
         </p>
 
-        <Heading text={heading} />
-        <p className="ch-am">{am}</p>
-        <p className="ch-body">{body}</p>
+        <Heading text={t(heading)} />
+
+        {/*
+          The accent line is always the heading in the *other* language, so the
+          page stays visibly bilingual whichever way it is being read.
+        */}
+        <p className="ch-am">{other(heading).replace('\n', ' ')}</p>
+        <p className="ch-body">{t(body)}</p>
 
         {stats && (
           <div className="ch-stats">
             {stats.map((stat) => (
-              <div className="ch-stat" key={stat.label}>
+              <div className="ch-stat" key={stat.value}>
                 <span className="ch-stat-value">{stat.value}</span>
-                <span className="ch-stat-label">{stat.label}</span>
-                <span className="ch-stat-am">{stat.am}</span>
+                <span className="ch-stat-label">{t(stat.label)}</span>
+                <span className="ch-stat-am">{other(stat.label)}</span>
               </div>
             ))}
           </div>
@@ -82,11 +94,11 @@ function Chapter({ data, active }) {
         {sites && (
           <ul className="ch-sites">
             {sites.map((site) => (
-              <li key={site.name}>
-                <span className="site-name">{site.name}</span>
-                <span className="site-am">{site.am}</span>
+              <li key={site.size}>
+                <span className="site-name">{t(site.name)}</span>
+                <span className="site-am">{other(site.name)}</span>
                 <span className="site-size">{site.size}</span>
-                <span className="site-note">{site.note}</span>
+                <span className="site-note">{t(site.note)}</span>
               </li>
             ))}
           </ul>
@@ -97,7 +109,7 @@ function Chapter({ data, active }) {
             {delivered.map((project) => (
               <li key={project.name}>
                 <span className="delivered-name">{project.name}</span>
-                <span className="delivered-place">{project.place}</span>
+                <span className="delivered-place">{t(project.place)}</span>
                 <span className="delivered-detail">
                   {project.detail} <span className="sep">/</span> {project.area}
                 </span>
@@ -106,6 +118,7 @@ function Chapter({ data, active }) {
           </ul>
         )}
 
+        {data.feed && <Feed />}
         {data.id === 'contact' && <ContactBlock />}
       </div>
     </section>
@@ -114,49 +127,58 @@ function Chapter({ data, active }) {
 
 /** Per-unit price table for the Kaliti mall. */
 function UnitTable({ units }) {
+  const { t } = useLang()
+
   return (
     <div className="unit-table-wrap">
       <table className="unit-table">
         <thead>
           <tr>
-            <th scope="col">Floor</th>
-            <th scope="col">Size</th>
-            <th scope="col">Total price</th>
-            <th scope="col">Down payment</th>
+            <th scope="col">{t(UI.unitTable.floor)}</th>
+            <th scope="col">{t(UI.unitTable.size)}</th>
+            <th scope="col">{t(UI.unitTable.price)}</th>
+            <th scope="col">{t(UI.unitTable.down)}</th>
           </tr>
         </thead>
         <tbody>
           {units.map((unit, index) => (
-            <tr key={`${unit.floor}-${unit.size}-${index}`}>
-              <td>{unit.floor}</td>
-              <td>{unit.size}</td>
-              <td className="num">{unit.price}</td>
-              <td className="num">{unit.down}</td>
+            <tr key={`${unit.size}-${index}`}>
+              {/* Repeated as a data-label so the table can restack on phones. */}
+              <td data-label={t(UI.unitTable.floor)}>{t(unit.floor)}</td>
+              <td data-label={t(UI.unitTable.size)}>{unit.size}</td>
+              <td className="num" data-label={t(UI.unitTable.price)}>
+                {unit.price}
+              </td>
+              <td className="num" data-label={t(UI.unitTable.down)}>
+                {unit.down}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <p className="unit-table-note">All figures in birr.</p>
+      <p className="unit-table-note">{t(UI.allFiguresBirr)}</p>
     </div>
   )
 }
 
 function CommercialProject({ project }) {
+  const { t, other } = useLang()
+
   return (
     <article className="project">
       <header className="project-head">
-        <h3>{project.name}</h3>
-        <p className="project-am">{project.am}</p>
+        <h3>{t(project.name)}</h3>
+        <p className="project-am">{other(project.name)}</p>
       </header>
 
-      <p className="project-summary">{project.summary}</p>
+      <p className="project-summary">{t(project.summary)}</p>
 
       {project.facts && (
         <dl className="project-facts">
           {project.facts.map((fact) => (
-            <div key={fact.k}>
-              <dt>{fact.k}</dt>
-              <dd>{fact.v}</dd>
+            <div key={fact.k.en}>
+              <dt>{t(fact.k)}</dt>
+              <dd>{t(fact.v)}</dd>
             </div>
           ))}
         </dl>
@@ -165,7 +187,7 @@ function CommercialProject({ project }) {
       {project.features && (
         <ul className="project-features">
           {project.features.map((feature) => (
-            <li key={feature}>{feature}</li>
+            <li key={feature.en}>{t(feature)}</li>
           ))}
         </ul>
       )}
@@ -176,6 +198,8 @@ function CommercialProject({ project }) {
 }
 
 export default function Chapters({ chapter }) {
+  const { t, other } = useLang()
+
   return (
     <main className="chapters">
       {/*
@@ -189,26 +213,28 @@ export default function Chapters({ chapter }) {
         ))}
       </div>
 
-      <div className="assurances" aria-label="What you get">
+      <Pillars />
+
+      <div className="assurances" aria-label={t(UI.whatYouGet)}>
         <ul>
           {ASSURANCES.map((item) => (
             <li key={item.en}>
-              <span className="assurance-en">{item.en}</span>
-              <span className="assurance-am">{item.am}</span>
+              <span className="assurance-en">{t(item)}</span>
+              <span className="assurance-am">{other(item)}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <section className="commercial" id="commercial" aria-label="Commercial units">
+      <section className="commercial" id="commercial" aria-label={t(COMMERCIAL.eyebrow)}>
         <div className="commercial-head">
           <p className="eyebrow">
-            {COMMERCIAL.eyebrow}
-            <span className="eyebrow-am">{COMMERCIAL.eyebrowAm}</span>
+            {t(COMMERCIAL.eyebrow)}
+            <span className="eyebrow-am">{other(COMMERCIAL.eyebrow)}</span>
           </p>
-          <h2>{COMMERCIAL.heading}</h2>
-          <p className="commercial-am">{COMMERCIAL.am}</p>
-          <p className="commercial-body">{COMMERCIAL.body}</p>
+          <h2>{t(COMMERCIAL.heading)}</h2>
+          <p className="commercial-am">{other(COMMERCIAL.heading)}</p>
+          <p className="commercial-body">{t(COMMERCIAL.body)}</p>
         </div>
 
         <div className="projects">
@@ -219,7 +245,7 @@ export default function Chapters({ chapter }) {
 
         <a className="commercial-call" href={PHONE_TEL}>
           <PhoneIcon size={18} />
-          Ask Wonde about a unit
+          {t(UI.askAboutUnit)}
           <span className="commercial-call-num">{PHONE}</span>
         </a>
       </section>

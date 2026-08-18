@@ -86,6 +86,25 @@ Reflections come from a procedural `<Environment>` built out of `Lightformer`
 rectangles - no HDRI download, and the vertical strips are what give the
 glazing something structured to reflect.
 
+## Languages
+
+English and Amharic, switchable from the header and persisted to
+`localStorage` (an `am` browser locale gets Amharic first).
+
+Every translatable string in `src/content.js` is an `{ en, am }` pair.
+`src/i18n.jsx` exposes `t()` for the active language and `other()` for the
+opposite one - `other()` is what renders the amber accent line under each
+heading, so whichever language you read, the other sits beneath it. Adding
+copy means adding both halves of the pair; there is no fallback chain to hide
+a missing translation behind.
+
+Amharic is not just a string swap. `:root[data-lang='am']` switches the
+display face to Noto Serif Ethiopic (Archivo has no Ge'ez glyphs and would
+fall back to whatever the OS offers), drops the tight negative tracking, opens
+up the line height, and reduces the heading size, because Ethiopic syllabics
+are wider and taller than Latin caps. The accent line inverts to the Latin
+grotesk at the same time.
+
 ## Rendering notes
 
 - Camera keyframes live with the copy, in `src/content.js`, in normalised units
@@ -102,6 +121,60 @@ glazing something structured to reflect.
 - Materials keep the source's `DoubleSide`. Culling back faces would halve
   fragment work, but architectural exports routinely model railings and glazing
   as single-sided planes that then vanish. Opt in per-recipe with `cull: true`.
+
+### Performance
+
+The building turns slowly on its own axis. Because the geometry moves, neither
+the directional light's shadow map nor the contact-shadow pass can be baked -
+both re-render every frame. That is the single largest cost in the frame and
+it is a deliberate trade for the motion.
+
+If you ever need the cheap version back, it is a one-line change: `spin={0}`
+on `<Tower>` makes the scene fully static, which then allows
+`gl.shadowMap.autoUpdate = false` plus `frames={1}` on `<ContactShadows>`.
+Measured at roughly 2.3x the frame rate under software rendering.
+`prefers-reduced-motion` already takes this path.
+
+The shadow-camera frustum covers 64 units, far wider than the building. This
+is not slack: a frustum smaller than the *visible ground* ends in a hard
+straight line where shadowing simply stops, and that line reads as a
+rectangular plinth under the tower. The map is 2048² rather than 4096²
+precisely because it is re-rendered per frame.
+
+`<ContactShadows>` sits *inside* `<Suspense>` so it never renders against a
+scene whose GLB has not resolved yet.
+
+Do not add an `<SMAA/>` pass to the composer. It floods the console with
+`glBlitFramebuffer: Read and write depth stencil attachments cannot be the
+same image` on every frame - bisected to SMAA specifically (composer on with
+SMAA off is clean; every other effect off still errors). Antialiasing is the
+composer's own MSAA instead.
+
+## Camera framing
+
+```bash
+npm run preview            # in one terminal
+node scripts/framing.mjs   # in another
+```
+
+Projects the tower's bounding box through every chapter keyframe at both
+viewports and reports where it lands in normalised device coordinates, so
+framing can be tuned numerically instead of by eye. Screenshots under software
+rendering cost ~40s each, which is far too slow to tune five keyframes.
+
+Read `top 1.34` as "the roof is 34% of a half-viewport above the top edge".
+
+**Cropping is not automatically a fault.** The keyframes deliberately sit
+close enough that the tower fills the frame and runs past the edges - that is
+what makes the shots feel cinematic rather than like a product photographed on
+a table. An earlier pass "fixed" every reported crop by pulling the camera
+back 22-73%, and the result looked markedly worse: a small object centred in a
+lot of empty dark.
+
+Use the tool to catch framing that is *accidentally* wrong - a shot that has
+drifted so far the subject is unreadable, or the portrait overflow of 2x that
+the desktop keyframes produce on a phone if `cameraMobile` is missing. Do not
+use it to chase every value inside ±1.
 
 ## Render check
 

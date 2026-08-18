@@ -1,12 +1,12 @@
 import { Suspense, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { ContactShadows, Environment, Lightformer } from '@react-three/drei'
-import { EffectComposer, Bloom, Noise, Vignette, SMAA } from '@react-three/postprocessing'
+import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
 import Tower from './Tower.jsx'
 import Ground from './Ground.jsx'
-import { sampleCameraPath } from './cameraPath.js'
+import { sampleCameraPath, PORTRAIT_ASPECT } from './cameraPath.js'
 
 /**
  * Dusk palette. Warm amber key against cool blue shadow, which is both the
@@ -31,7 +31,9 @@ function CameraRig({ progress, reducedMotion, pointer }) {
   const started = useRef(false)
 
   useFrame((_, delta) => {
-    const fov = sampleCameraPath(progress.current, desiredPosition, desiredTarget)
+    // Portrait viewports get their own keyframes - see cameraPath.js.
+    const variant = camera.aspect < PORTRAIT_ASPECT ? 'mobile' : 'desktop'
+    const fov = sampleCameraPath(progress.current, desiredPosition, desiredTarget, variant)
 
     // Gentle parallax so the shot feels hand-held rather than on rails.
     if (!reducedMotion) {
@@ -104,18 +106,32 @@ function Studio() {
 function Lights() {
   return (
     <>
+      {/*
+        Deliberately dim and high-contrast. Lifting the ambient to "read" the
+        whole facade flattens it and loses the near-black mood the design is
+        built on - the building should emerge from the dark, not sit in a lit
+        room. Warm key, cool rim, and nothing filling the front.
+      */}
       <hemisphereLight args={[FILL, GROUND, 0.55]} />
       <directionalLight
         position={[-9, 13, 7]}
         intensity={2.6}
         color={KEY}
         castShadow
+        // The building rotates, so this re-renders every frame - 2048, not the
+        // 4096 that was affordable back when the map could be baked once.
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0006}
         shadow-normalBias={0.02}
       >
-        {/* Tight ortho frustum around the tower keeps shadow texels dense. */}
-        <orthographicCamera attach="shadow-camera" args={[-11, 11, 14, -2, 1, 40]} />
+        {/*
+          The frustum must cover the whole *visible* ground, not just the
+          tower. Ground.jsx fades out at roughly 30 units, and a frustum
+          smaller than that ends in a hard straight line across the ground
+          where shadowing simply stops - which read as a rectangular plinth
+          under the building.
+        */}
+        <orthographicCamera attach="shadow-camera" args={[-32, 32, 32, -8, 1, 90]} />
       </directionalLight>
       {/* cool rim from behind to separate the silhouette from the background */}
       <directionalLight position={[10, 6, -9]} intensity={0.9} color={FILL} />
@@ -158,24 +174,35 @@ export default function Scene({ progress, reducedMotion, quality = 'high' }) {
         <Tower spin={reducedMotion ? 0 : 0.015} />
         <Ground />
         <Studio />
+
+        {/*
+          Re-rendered every frame, because the building turns underneath it.
+          Kept inside Suspense so it never renders against an empty scene.
+        */}
+        <ContactShadows
+          position={[0, 0.01, 0]}
+          opacity={0.62}
+          scale={34}
+          blur={2.4}
+          far={12}
+          resolution={quality === 'high' ? 1024 : 512}
+          color="#000000"
+        />
       </Suspense>
 
       <Lights />
 
-      <ContactShadows
-        position={[0, 0.01, 0]}
-        opacity={0.62}
-        scale={34}
-        blur={2.4}
-        far={12}
-        resolution={quality === 'high' ? 1024 : 512}
-        color="#000000"
-      />
-
       <CameraRig progress={progress} reducedMotion={reducedMotion} pointer={pointer} />
 
+      {/*
+        Antialiasing is the composer's own WebGL2 MSAA, not an SMAA pass.
+        An <SMAA/> pass here floods the console with
+        "glBlitFramebuffer: Read and write depth stencil attachments cannot be
+        the same image" on every frame - bisected to SMAA specifically
+        (composer on + SMAA off is clean, every other effect off still errors).
+      */}
       {quality === 'high' && (
-        <EffectComposer multisampling={0} disableNormalPass>
+        <EffectComposer multisampling={4} disableNormalPass>
           <Bloom
             intensity={0.55}
             luminanceThreshold={0.72}
@@ -184,7 +211,6 @@ export default function Scene({ progress, reducedMotion, quality = 'high' }) {
           />
           <Vignette offset={0.28} darkness={0.72} eskil={false} />
           <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} opacity={0.35} />
-          <SMAA />
         </EffectComposer>
       )}
     </Canvas>

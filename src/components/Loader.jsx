@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { BRAND } from '../content.js'
+import { useLang } from '../i18n.jsx'
 
 /**
  * Load curtain.
@@ -11,6 +12,7 @@ import { BRAND } from '../content.js'
  */
 export default function Loader({ onReady }) {
   const { progress, active } = useProgress()
+  const { t } = useLang()
   const [hidden, setHidden] = useState(false)
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function Loader({ onReady }) {
     <div className={`loader${hidden ? ' is-hidden' : ''}`} aria-hidden={hidden}>
       <div className="loader-inner">
         <p className="loader-brand">{BRAND.mark}</p>
-        <p className="loader-am">{BRAND.am}</p>
+        <p className="loader-am">{t(BRAND.name)}</p>
 
         <div className="loader-track">
           <div className="loader-fill" style={{ transform: `scaleX(${progress / 100})` }} />

@@ -83,7 +83,16 @@ function hideBasePlates(model) {
   return hidden
 }
 
-export default function Tower({ spin = 0.02, hidePlate = true }) {
+/**
+ * The building turns slowly on its own axis, independently of the camera path.
+ *
+ * This costs real frame time: because the geometry moves, neither the
+ * directional light's shadow map nor the contact-shadow pass can be baked, so
+ * both re-render every frame. That is a deliberate trade - the motion is what
+ * gives the scene life. `spin={0}` restores the cheap static version, and
+ * reduced-motion users already get it.
+ */
+export default function Tower({ spin = 0.015, hidePlate = true }) {
   const group = useRef()
   const { scene } = useGLTF(MODEL_URL, false, true)
   const { gl } = useThree()

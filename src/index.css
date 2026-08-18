@@ -408,10 +408,17 @@ a {
   transform: translateY(0);
 }
 
-/* supporting blocks share one reveal timing */
+/*
+  Supporting blocks share one reveal timing.
+
+  Every block a chapter can render must be listed here. Anything left out
+  never fades, so it stays lit while a later chapter is on screen and the two
+  chapters visibly overlap - which is exactly what happened when the sites and
+  delivered lists were added without being added here.
+*/
 .ch-stats,
-.ch-specs,
-.ch-marks,
+.ch-sites,
+.ch-delivered,
 .ch-contact {
   opacity: 0;
   transform: translateY(16px);
@@ -419,8 +426,8 @@ a {
 }
 
 .ch.is-active .ch-stats,
-.ch.is-active .ch-specs,
-.ch.is-active .ch-marks,
+.ch.is-active .ch-sites,
+.ch.is-active .ch-delivered,
 .ch.is-active .ch-contact {
   opacity: 1;
   transform: translateY(0);
@@ -1189,8 +1196,8 @@ a {
   .ch-am,
   .ch-body,
   .ch-stats,
-  .ch-specs,
-  .ch-marks,
+  .ch-sites,
+  .ch-delivered,
   .ch-contact {
     transform: none;
     opacity: 1;
@@ -1201,5 +1208,621 @@ a {
   .nav-call-dot,
   .scroll-hint-line::after {
     animation: none;
+  }
+}
+
+/* ── language switch ───────────────────────────────────────────── */
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(11, 15, 22, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.lang button {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  background: none;
+  border: 0;
+  padding: 0.1rem 0.1rem;
+  cursor: pointer;
+  transition: color 0.25s;
+}
+
+.lang button[lang='am'] {
+  font-family: var(--eth);
+  letter-spacing: 0;
+}
+
+.lang button:hover {
+  color: var(--ink);
+}
+
+.lang button.is-active {
+  color: var(--amber);
+}
+
+.lang-sep {
+  width: 1px;
+  height: 11px;
+  background: var(--line);
+}
+
+/*
+  Amharic mode.
+
+  Archivo carries no Ge'ez glyphs, so an Amharic heading left in the Latin
+  display face falls back to whatever the OS offers - usually a mismatched
+  weight at the wrong optical size. Swap the display face wholesale, and drop
+  the tight negative tracking: Ethiopic syllabics are wider and taller than
+  Latin caps and need the room, both between letters and between lines.
+
+  The accent line inverts at the same time - in Amharic mode it carries the
+  English, so it goes back to the Latin grotesk.
+*/
+:root[data-lang='am'] .ch-heading,
+:root[data-lang='am'] .commercial h2,
+:root[data-lang='am'] .project-head h3,
+:root[data-lang='am'] .footer-brand {
+  font-family: var(--eth-display);
+  letter-spacing: 0;
+  line-height: 1.24;
+}
+
+:root[data-lang='am'] .ch-heading {
+  /* Ethiopic runs longer than English at the same point size. */
+  font-size: clamp(2rem, 5.4vw, 4.2rem);
+}
+
+:root[data-lang='am'] .ch-body,
+:root[data-lang='am'] .commercial-body,
+:root[data-lang='am'] .project-summary,
+:root[data-lang='am'] .assurance-en,
+:root[data-lang='am'] .site-note,
+:root[data-lang='am'] .ch-stat-label {
+  font-family: var(--eth);
+  line-height: 1.75;
+}
+
+:root[data-lang='am'] .ch-am,
+:root[data-lang='am'] .commercial-am,
+:root[data-lang='am'] .project-am,
+:root[data-lang='am'] .footer-brand-am,
+:root[data-lang='am'] .assurance-am,
+:root[data-lang='am'] .ch-stat-am,
+:root[data-lang='am'] .ch-label-am,
+:root[data-lang='am'] .site-am {
+  font-family: var(--sans);
+}
+
+/* ── mobile refinements ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  /*
+    The unit table has four columns of figures, which will not fit a phone
+    without either scrolling sideways or shrinking to unreadable. Restack each
+    row as a labelled card instead - the `data-label` values come from
+    Chapters.jsx so they translate with everything else.
+  */
+  .unit-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .unit-table,
+  .unit-table tbody,
+  .unit-table tr,
+  .unit-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .unit-table tr {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .unit-table td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2rem 0;
+    border: 0;
+  }
+
+  .unit-table td::before {
+    content: attr(data-label);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* Keep the fixed call bar from covering the last line of any section. */
+  .commercial,
+  .chapters {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .call-bar {
+    padding-bottom: calc(0.95rem + env(safe-area-inset-bottom));
+  }
+
+  /* Comfortable tap targets - 44px is the accessible minimum. */
+  .lang button {
+    min-width: 30px;
+    min-height: 30px;
+  }
+
+  .btn,
+  .nav-call {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .rail {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  /*
+    The brand's second line and the chapter label duplicate information that
+    the heading already carries, and on a 390px screen they push the headline
+    below the fold. Drop them rather than shrink them.
+  */
+  .nav-brand-am,
+  .ch-label-am {
+    display: none;
+  }
+
+  .ch-tag {
+    gap: 0.5rem;
+  }
+
+  .ch-stats {
+    gap: 1.1rem 1.6rem;
+  }
+
+  .ch-stat-value {
+    font-size: clamp(1.6rem, 8vw, 2.1rem);
+  }
+
+  .footer-legal {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 560px) {
+  /*
+    Drop the header call button on phones. It duplicates the sticky call bar
+    pinned to the bottom of the viewport, and at 390px the three header items
+    collide - noticeably so in Amharic, where "ወንደሰንን ይደውሉ" is wider than
+    "Call Wonde". Brand and language switch are what actually need to be here.
+  */
+  .nav-call {
+    display: none;
+  }
+
+  /* Clear the sticky call bar so the last line of a chapter is never under it. */
+  .ch {
+    padding-bottom: 5.5rem;
+  }
+}
+
+/* ── chapter 3: listings carousel ──────────────────────────────── */
+
+/*
+  Cards share one HEIGHT and keep their own width. The source assets are a mix
+  of landscape aerials and portrait posters; a uniform box would crop the
+  poster artwork and slice the badges off the photos. A fixed-height filmstrip
+  keeps every image whole and still reads as a tidy row.
+
+  The amber duotone is CSS, not baked into the files, so the hover/tap reveal
+  is a single property change rather than a second image download.
+  See scripts/media/posts.mjs.
+*/
+
+.ch-wide .ch-inner {
+  width: min(74rem, 100%);
+  padding-right: 0;
+}
+
+.feed-wrap {
+  margin-top: clamp(1.5rem, 3.5vh, 2.2rem);
+}
+
+.feed-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.feed-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.feed-hint::before {
+  content: '';
+  width: 18px;
+  height: 1px;
+  background: var(--amber);
+}
+
+.feed-nav {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.feed-nav button {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(11, 15, 22, 0.6);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s, opacity 0.3s;
+}
+
+.feed-nav button:hover:not(:disabled) {
+  border-color: rgba(242, 169, 59, 0.6);
+  background: rgba(242, 169, 59, 0.12);
+  color: var(--amber);
+}
+
+.feed-nav button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.feed-nav button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.feed {
+  display: flex;
+  gap: 0.875rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Bleed to the viewport edge so the strip reads as continuing off-screen
+     rather than stopping inside the text column. */
+  margin-right: calc(var(--gutter) * -1);
+  padding: 0 var(--gutter) 0.25rem 0;
+}
+
+.feed::-webkit-scrollbar {
+  display: none;
+}
+
+.post {
+  position: relative;
+  flex: 0 0 auto;
+  height: clamp(18rem, 40vh, 24rem);
+  scroll-snap-align: start;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(11, 15, 22, 0.6);
+  transition: border-color 0.4s ease;
+}
+
+.post:hover,
+.post.is-revealed {
+  border-color: rgba(242, 169, 59, 0.5);
+}
+
+.post:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.post-media {
+  display: block;
+  height: 100%;
+}
+
+.post-media img {
+  display: block;
+  height: 100%;
+  width: auto;
+  filter: grayscale(1) sepia(0.58) hue-rotate(-14deg) saturate(1.9)
+    brightness(0.62) contrast(1.12);
+  transition: filter 0.55s ease;
+}
+
+.post:hover .post-media img,
+.post.is-revealed .post-media img {
+  filter: none;
+}
+
+.post-kind {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(7, 9, 13, 0.76);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.24rem 0.58rem;
+}
+
+.post-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  padding: 2.6rem 0.8rem 0.75rem;
+  background: linear-gradient(180deg, transparent, rgba(7, 9, 13, 0.94) 58%);
+}
+
+.post-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.post-place {
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+.post-detail {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--amber);
+  margin-top: 0.2rem;
+}
+
+/* ── homes and shops, given equal weight ───────────────────────── */
+
+.pillars {
+  padding: clamp(4rem, 10vh, 7rem) var(--gutter);
+  background: rgba(7, 9, 13, 0.86);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+
+.pillars-head {
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.pillars-head h2 {
+  font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: clamp(1.6rem, 4vw, 3.4rem);
+}
+
+.pillar {
+  border-top: 2px solid var(--amber);
+  padding-top: 1.4rem;
+}
+
+/* Shops take the cool accent so the two are distinguishable at a glance. */
+.pillar-shops {
+  border-top-color: var(--blue);
+}
+
+.pillar-kind {
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.pillar-lead {
+  color: var(--ink-dim);
+  margin: 0.4rem 0 1.4rem;
+  max-width: 34ch;
+}
+
+.pillar-figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  margin-bottom: 1.4rem;
+}
+
+.pillar-figures dt {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.pillar-figures dd {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.pillar-sites {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.pillar-sites li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.pillar-site-name {
+  font-weight: 500;
+  flex: 1 1 10rem;
+}
+
+.pillar-site-size {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+.pillar-site-note {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--amber);
+}
+
+.pillar-shops .pillar-site-note {
+  color: var(--blue);
+}
+
+.pillar-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid rgba(242, 169, 59, 0.5);
+  padding-bottom: 0.25rem;
+  transition: color 0.3s;
+}
+
+.pillar-cta::after {
+  content: '\2192';
+}
+
+.pillar-cta:hover {
+  color: var(--amber);
+}
+
+@media (max-width: 640px) {
+  .pillar-lead { max-width: none; }
+  .post { height: clamp(16rem, 34vh, 20rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post,
+  .post-media img {
+    transition: none;
+  }
+  .feed {
+    scroll-snap-type: none;
+  }
+}
+
+/*
+  The listings chapter carries far more content than the others (heading plus a
+  carousel), so centring it pushes the tag up underneath the fixed nav and the
+  strip off the bottom of the screen. Anchor it to the top instead, and trim
+  the display type so the whole composition still fits one viewport.
+*/
+.ch-wide {
+  align-items: flex-start;
+  padding-top: clamp(7rem, 16vh, 10rem);
+}
+
+.ch-wide .ch-heading {
+  font-size: clamp(2.1rem, 5vw, 3.9rem);
+}
+
+.ch-wide .ch-am {
+  font-size: clamp(1rem, 1.9vw, 1.35rem);
+}
+
+.ch-wide .ch-body {
+  max-width: 46ch;
+}
+
+.post {
+  height: clamp(15rem, 32vh, 20rem);
+}
+
+@media (max-width: 900px) {
+  /* No fixed rail on small screens, so the strip can bleed both ways. */
+  .ch-wide {
+    padding-top: clamp(6rem, 13vh, 8rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .post {
+    height: clamp(14rem, 30vh, 18rem);
+  }
+
+  .feed-hint {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+}
+
+/*
+  Touch devices swipe the strip natively, so the arrows are pointer-only
+  affordance. Hiding them below 640px also resolves the Amharic hint text
+  colliding with them - Amharic runs noticeably longer than the English.
+*/
+@media (max-width: 640px) {
+  .feed-nav {
+    display: none;
+  }
+
+  .feed-hint {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
   }
 }
