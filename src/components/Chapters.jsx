@@ -173,6 +173,16 @@ function CommercialProject({ project }) {
 
       <p className="project-summary">{t(project.summary)}</p>
 
+      {/* The pitch in Wonde's own words, from the Telegram post. The facts
+          and unit table below carry the same terms as structured data. */}
+      {project.pitch && (
+        <ul className="project-pitch">
+          {project.pitch.map((line) => (
+            <li key={line.en}>{t(line)}</li>
+          ))}
+        </ul>
+      )}
+
       {project.facts && (
         <dl className="project-facts">
           {project.facts.map((fact) => (

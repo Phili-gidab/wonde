@@ -31,6 +31,8 @@ export const UI = {
   },
   handedOver: { en: "Handed over", am: "ተረክቧል" },
   offerNow: { en: "Offer", am: "ቅናሽ" },
+  readPost: { en: "Read the post", am: "መልዕክቱን ያንብቡ" },
+  close: { en: "Close", am: "ዝጋ" },
   prev: { en: 'Previous', am: 'ወደ ኋላ' },
   next: { en: 'Next', am: 'ወደ ፊት' },
   trueColour: { en: "Tap a card for its real colours", am: "ትክክለኛ ቀለም ለማየት ካርዱን ይንኩ" },
@@ -246,6 +248,23 @@ export const COMMERCIAL = {
   projects: [
     {
       id: 'piyassa',
+      // Wonde's own framing from the Telegram post. The facts array below
+      // carries the same terms as structured data; this is the pitch in his
+      // voice. If a price changes, change both.
+      pitch: [
+        {
+          en: 'Your chance to own a shop in Piyassa, a district being rebuilt to rival Dubai.',
+          am: 'እንደ ዱባይ እየተዋበች ባለችው ፒያሳ ላይ የሱቅ ባለቤት የሚሆኑበት እድል እነሆ!',
+        },
+        {
+          en: 'Own a shop where the footfall already is.',
+          am: 'ከፍተኛ የሰዎች እንቅስቃሴ ባለበት የሱቅ ባለቤት ይሁኑ።',
+        },
+        {
+          en: '10% off for buyers paying 100% up front.',
+          am: '100% ለሚከፍሉ 10% ቅናሽ።',
+        },
+      ],
       name: { en: 'Piyassa - Adwa Museum', am: 'መሃል ፒያሳ · አድዋ ሙዝየም' },
       summary: {
         en: '2 basements + G+5 retail centre, opposite the Adwa Museum and beside the main car park.',
@@ -275,6 +294,16 @@ export const COMMERCIAL = {
     },
     {
       id: 'kaliti',
+      pitch: [
+        {
+          en: 'Six sites already built and handed over. This one is in central Kaliti (Gelan).',
+          am: '6 ሳይቶችን ሰርተን አስረክበናል። ይህኛው መሀል ቃሊቲ (ገላን) ላይ ነው።',
+        },
+        {
+          en: '10% off for buyers paying 100% up front.',
+          am: '100% ለሚከፍሉ 10% ቅናሽ።',
+        },
+      ],
       name: { en: 'Kaliti - Gelan', am: 'ቃሊቲ (ገላን)' },
       summary: {
         en: 'A wide modern mall in central Kaliti. Six sites already built and handed over.',
@@ -372,54 +401,168 @@ export const POSTS = [
     title: 'AGT Trading',
     place: { en: 'Atena Tera', am: 'አጤና ተራ' },
     detail: '2B+G+5 · 603 m²',
+    lines: [
+      {
+        en: 'Handed over at Atena Tera - two basements plus ground and five floors, 603 m² built up.',
+        am: 'በአጤና ተራ ተረክቧል - 2 ምድር ቤት ከነግራውንድ እና 5 ፎቅ፣ 603 ካሬ የተሰራ።',
+      },
+      {
+        en: 'One of eleven projects Temer has completed and handed over in ten years.',
+        am: 'ቴምር በ10 ዓመት ውስጥ ካጠናቀቃቸው 11 ፕሮጀክቶች አንዱ።',
+      },
+    ],
   },
   {
     id: 'post-02', kind: 'built', w: 1000, h: 497,
     title: 'MAW',
     place: { en: 'Ayat', am: 'አያት' },
     detail: 'B+G+11 · 822 m²',
+    lines: [
+      {
+        en: 'Handed over at Ayat - basement plus ground and eleven floors, 822 m² built up.',
+        am: 'በአያት ተረክቧል - ምድር ቤት ከነግራውንድ እና 11 ፎቅ፣ 822 ካሬ የተሰራ።',
+      },
+      {
+        en: 'Finished complete and on schedule, which is what Temer is known for.',
+        am: 'ጥንቅቅ ተደርጎ በጊዜው ተጠናቋል፤ ቴምር የሚታወቅበት ይኸው ነው።',
+      },
+    ],
   },
   {
     id: 'post-03', kind: 'built', w: 1000, h: 497,
     title: '2MA',
     place: { en: 'Lebu', am: 'ለቡ' },
     detail: 'B+G+9 · 1,080 m²',
+    lines: [
+      {
+        en: 'Handed over at Lebu - basement plus ground and nine floors, 1,080 m² built up.',
+        am: 'በለቡ ተረክቧል - ምድር ቤት ከነግራውንድ እና 9 ፎቅ፣ 1,080 ካሬ የተሰራ።',
+      },
+      {
+        en: 'You can go and stand in front of it. That is the point of showing these.',
+        am: 'ሄደው ማየት ይችላሉ። እነዚህን የምናሳይበት ምክንያትም ይኸው ነው።',
+      },
+    ],
   },
   {
     id: 'post-04', kind: 'built', w: 1000, h: 837,
     title: 'Mohammed.S',
     place: { en: 'Lafto', am: 'ላፍቶ' },
     detail: '2B+G+6 · 750 m²',
+    lines: [
+      {
+        en: 'Handed over at Lafto - two basements plus ground and six floors, 750 m² built up.',
+        am: 'በላፍቶ ተረክቧል - 2 ምድር ቤት ከነግራውንድ እና 6 ፎቅ፣ 750 ካሬ የተሰራ።',
+      },
+      {
+        en: 'Occupied and lived in - the lights in the windows are residents.',
+        am: 'ተይዞ እየተኖረበት ነው - በመስኮቶቹ የሚታየው ብርሃን የነዋሪዎች ነው።',
+      },
+    ],
   },
   {
     id: 'post-05', kind: 'offer', w: 1000, h: 1250,
     title: { en: 'Sarbet', am: 'ሳር ቤት' },
     place: { en: 'Luxury living centre', am: 'የቅንጦት ህይወት ማዕከል' },
     detail: { en: '30% off', am: '30% ቅናሽ' },
+    lines: [
+      {
+        en: 'Own a home for a total of just 4.6 million birr.',
+        am: 'በ4.6 ሚልዮን ብር ጠቅላላ ክፍያ ብቻ የቤት ባለቤት ይሁኑ።',
+      },
+      {
+        en: 'Pay 40% now. The remaining 60% is due when you take the keys, with no increase on the balance.',
+        am: 'የቤቱን 40% ብቻ ከፍለው ቀሪውን 60% ቤትዎን ሲረከቡ ይክፈሉ፤ በቀሪ ክፍያ ላይ ምንም ጭማሪ የለም።',
+      },
+      {
+        en: 'Studio to three bedroom at Sarbet Adebabay, 76 to 151 m², at up to 30% off.',
+        am: 'በሳር ቤት አደባባይ ከስቱዲኦ እስከ ባለ ሶስት መኝታ፣ ከ76 እስከ 151 ካሬ፣ እስከ 30% ቅናሽ።',
+      },
+      {
+        en: 'Buying from abroad? The documents go out to you by DHL.',
+        am: 'ከሀገር ውጭ ነዎት? ሰነዶቹን ባሉበት በDHL እንልካለን።',
+      },
+    ],
   },
   {
     id: 'post-06', kind: 'offer', w: 1000, h: 1250,
     title: { en: 'Megenagna', am: 'መገናኛ' },
     place: { en: 'New site now open', am: 'አዲስ ሳይት ተከፍቷል' },
     detail: { en: '35% off · 32-154 m²', am: '35% ቅናሽ · 32-154 ካሬ' },
+    lines: [
+      {
+        en: 'A new Temer site at Megenagna, on the Diaspora roundabout.',
+        am: 'በመገናኛ ዲያስፖራ አደባባይ አዲስ የቴምር ሳይት።',
+      },
+      {
+        en: '32 to 154 m², at 130,000 birr per square metre, with up to 35% off.',
+        am: 'ከ32 እስከ 154 ካሬ፣ በካሬ 130,000 ብር፣ እስከ 35% ቅናሽ።',
+      },
+      {
+        en: '40% on signing and 60% on handover, with no price increase on the balance.',
+        am: '40% ቅድመ ክፍያ እና 60% ሲረከቡ፤ በቀሪ ክፍያ ላይ የዋጋ ጭማሪ የለም።',
+      },
+    ],
   },
   {
     id: 'post-07', kind: 'offer', w: 1000, h: 1250,
     title: { en: 'Sarbet Adebabay', am: 'ሳር ቤት አደባባይ' },
     place: { en: 'Diplomat neighbourhood', am: 'ዲፕሎማት መንደር' },
     detail: { en: '30% off', am: '30% ቅናሽ' },
+    lines: [
+      {
+        en: 'A new Temer address in the diplomat neighbourhood at Sarbet.',
+        am: 'በሳር ቤት ዲፕሎማት መንደር አዲስ የቴምር አድራሻ።',
+      },
+      {
+        en: 'Up to 30% off, with 40% on signing and 60% on handover.',
+        am: 'እስከ 30% ቅናሽ፤ 40% ቅድመ ክፍያ እና 60% ሲረከቡ።',
+      },
+      {
+        en: 'Gated compound houses are also available, at up to 35% off.',
+        am: 'ግቢ ቤቶችም እስከ 35% ቅናሽ ይገኛሉ።',
+      },
+    ],
   },
   {
     id: 'post-08', kind: 'offer', w: 1000, h: 1250,
     title: { en: 'Sarbet', am: 'ሳር ቤት' },
     place: { en: 'By Adams Pavilion', am: 'ከአዳምስ ፓቪሊየን ጎን' },
     detail: { en: '76-151 m² · 30% off', am: '76-151 ካሬ · 30% ቅናሽ' },
+    lines: [
+      {
+        en: 'At Sarbet, beside Adams Pavilion.',
+        am: 'በሳር ቤት፣ ከአዳምስ ፓቪሊየን ጎን።',
+      },
+      {
+        en: 'Studio to three bedroom, 76 to 151 m², at up to 30% off.',
+        am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ፣ ከ76 እስከ 151 ካሬ፣ እስከ 30% ቅናሽ።',
+      },
+      {
+        en: '4.6 million birr in total: 40% on signing, 60% when you take the keys.',
+        am: 'በ4.6 ሚልዮን ብር ጠቅላላ፡ 40% ቅድመ ክፍያ፣ 60% ቤትዎን ሲረከቡ።',
+      },
+    ],
   },
   {
     id: 'post-09', kind: 'offer', w: 1000, h: 1000,
     title: { en: 'Sarbet', am: 'ሳር ቤት' },
     place: { en: 'Studio to three bedroom', am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ' },
     detail: { en: '76-151 m² · 30% off', am: '76-151 ካሬ · 30% ቅናሽ' },
+    lines: [
+      {
+        en: 'Studio to three bedroom at Sarbet, 76 to 151 m².',
+        am: 'በሳር ቤት ከስቱዲኦ እስከ ባለ ሶስት መኝታ፣ ከ76 እስከ 151 ካሬ።',
+      },
+      {
+        en: 'Up to 30% off, and no price increase on the balance.',
+        am: 'እስከ 30% ቅናሽ፤ በቀሪ ክፍያ ላይ የዋጋ ጭማሪ የለም።',
+      },
+      {
+        en: 'Temer is also selling modern G+5 retail at Sarbet, African Union and Piyassa, from 1,400,000 birr down.',
+        am: 'ቴምር እንዲሁም ዘመናዊ G+5 የንግድ ሱቆች በሳር ቤት፣ አፍሪካ ህብረት እና ፒያሳ ከ1,400,000 ብር ቅድመ ክፍያ ጀምሮ እየሸጠ ነው።',
+      },
+    ],
   },
 ]
 
