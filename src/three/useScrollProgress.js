@@ -1,23 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
-import { chapterAt } from './cameraPath.js'
 
 /**
  * Scroll position as a 0..1 ref, plus the active chapter index as state.
  *
- * Progress is measured across the **chapter track only** (`#chapter-track`),
- * not the whole document. The page continues past the last chapter into the
- * assurances strip, the commercial section and the footer; measuring against
- * document height would mean chapter 5 was still reporting ~50% when it filled
- * the screen, so it never became active and its copy stayed at opacity 0.
+ * Everything is derived from the sections' current rects, every frame. Two
+ * earlier attempts cached measurements and both broke:
  *
- * Past the end of the track, progress pins at 1 and the camera simply holds
- * the final framing while the rest of the page is read.
+ *   - Dividing the track into equal parts assumed every chapter was one
+ *     viewport tall. The listings chapter is roughly six (its filmstrip
+ *     scrolls sideways as you scroll down), so every chapter after it
+ *     reported wrong.
+ *   - Caching each section's absolute top and re-measuring on resize still
+ *     went stale, because the listings section sets its own height in JS after
+ *     the strip knows how wide it is. The rail then lagged a whole chapter
+ *     behind on a sequential scroll.
  *
- * The raw progress is deliberately a ref, not state: the render loop reads it
- * every frame, and putting it in state would re-render the whole tree on every
- * scroll event. Only the chapter index - which changes a handful of times per
- * page - is state.
+ * Reading five rects per frame is cheap, and it cannot go stale.
+ *
+ * `progress` is deliberately a ref, not state: the render loop reads it every
+ * frame, and putting it in state would re-render the tree on every scroll
+ * event. Only the chapter index - which changes a handful of times per page -
+ * is state.
  */
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v)
+
 export function useScrollProgress() {
   const progress = useRef(0)
   const [chapter, setChapter] = useState(0)
@@ -28,22 +34,29 @@ export function useScrollProgress() {
     const read = () => {
       frame = 0
 
-      const track = document.getElementById('chapter-track')
-      let value = 0
+      const sections = document.querySelectorAll('#chapter-track .ch')
+      if (sections.length < 2) return
 
-      if (track) {
-        const top = track.getBoundingClientRect().top + window.scrollY
-        // Each chapter is one viewport tall, so the usable travel is the
-        // track height minus one viewport: that puts progress 0 on the first
-        // chapter and 1 on the last, both fully framed.
-        const span = track.offsetHeight - window.innerHeight
-        value = span > 0 ? (window.scrollY - top) / span : 0
+      const viewport = window.innerHeight
+      const rects = []
+      for (const section of sections) rects.push(section.getBoundingClientRect())
+
+      // The last section whose top has passed the middle of the screen.
+      let index = 0
+      for (let i = 0; i < rects.length; i++) {
+        if (rects[i].top <= viewport * 0.5) index = i
       }
+      index = Math.min(index, rects.length - 2)
 
-      value = value < 0 ? 0 : value > 1 ? 1 : value
-      progress.current = value
+      // The camera holds on a chapter's keyframe for as long as that chapter
+      // is on screen, then moves to the next one as the next section rises
+      // through the viewport. That is what lets you read a tall section
+      // without the building drifting the whole way down it.
+      const local = clamp01((viewport - rects[index + 1].top) / viewport)
 
-      const next = chapterAt(value)
+      progress.current = clamp01((index + local) / (rects.length - 1))
+
+      const next = local > 0.5 ? index + 1 : index
       setChapter((current) => (current === next ? current : next))
     }
 
@@ -54,14 +67,10 @@ export function useScrollProgress() {
 
     read()
     window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll, { passive: true })
-
-    // Fonts and the model both change layout height after first paint.
-    const settle = setTimeout(read, 600)
+    window.addEventListener('resize', onScroll)
 
     return () => {
       if (frame) cancelAnimationFrame(frame)
-      clearTimeout(settle)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }

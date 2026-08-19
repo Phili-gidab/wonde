@@ -2115,3 +2115,99 @@ a {
 .lightbox {
   margin: auto;
 }
+
+/* ── pinned filmstrip: vertical scroll drives it sideways ──────── */
+
+/*
+  Feed.jsx sets this wrapper's height in JS (one viewport + the track's travel)
+  and translates the track as you scroll. The inner panel sticks, so all nine
+  posts reveal on the way down and the cards can be far larger than a swipe
+  strip allows.
+
+  Pointer + wide + no reduced-motion only. Pinning hijacks the scroll, which is
+  hostile on a phone and precisely what prefers-reduced-motion asks us to avoid;
+  those cases keep the native scroll-snap strip.
+*/
+
+.feed-wrap.is-pinned {
+  position: relative;
+}
+
+.feed-wrap.is-pinned .feed-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.1rem;
+  overflow: hidden;
+
+  /* Escape the 74rem text column: .ch-inner starts exactly one gutter from the
+     viewport edge, so pulling back by that gutter and taking 100vw makes the
+     strip full-bleed while the cards still line up with the heading above. */
+  width: 100vw;
+  margin-left: calc(var(--gutter) * -1);
+  padding: clamp(4.5rem, 10vh, 6.5rem) 0 clamp(1.5rem, 4vh, 2.5rem) var(--gutter);
+}
+
+.feed-wrap.is-pinned .feed-head {
+  padding-right: var(--gutter);
+}
+
+.feed-wrap.is-pinned .feed {
+  /* The transform drives it now, not native scrolling. */
+  overflow: visible;
+  scroll-snap-type: none;
+  margin-right: 0;
+  padding-right: 0;
+  will-change: transform;
+}
+
+.feed-wrap.is-pinned .post {
+  height: clamp(22rem, 58vh, 36rem);
+  scroll-snap-align: none;
+}
+
+/* progress rail, in place of the arrows */
+.feed-rail {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-shrink: 0;
+}
+
+.feed-count {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.feed-bar {
+  display: block;
+  width: clamp(90px, 15vw, 240px);
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.feed-bar i {
+  display: block;
+  height: 100%;
+  background: var(--amber);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* Slightly larger cards in the fallback strip too. */
+.post {
+  height: clamp(17rem, 38vh, 24rem);
+}
+
+@media (max-width: 640px) {
+  .post {
+    height: clamp(15rem, 32vh, 19rem);
+  }
+}
