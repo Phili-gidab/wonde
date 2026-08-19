@@ -2211,3 +2211,36 @@ a {
     height: clamp(15rem, 32vh, 19rem);
   }
 }
+
+/*
+  The listings chapter no longer has a display heading - it opens straight onto
+  the carousel - so the section padding that used to clear the fixed nav is now
+  redundant. The sticky panel carries its own top padding, and leaving both
+  pushed the strip below the fold for the first screenful.
+*/
+.ch-wide {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.ch-wide .ch-inner {
+  width: 100%;
+}
+
+/* The chapter tag rides along inside the sticky panel instead. */
+.ch-wide .ch-tag {
+  position: absolute;
+  top: clamp(3.4rem, 7.5vh, 4.6rem);
+  left: var(--gutter);
+  margin: 0;
+  z-index: 1;
+}
+
+/*
+  The listings strip is full-bleed, so cards pass underneath the chapter rail -
+  and on hover they return to full colour. A shadow keeps the rail readable
+  over whatever happens to be behind it.
+*/
+.rail a {
+  text-shadow: 0 1px 10px rgba(7, 9, 13, 0.95), 0 0 3px rgba(7, 9, 13, 0.9);
+}

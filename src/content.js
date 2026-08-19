@@ -148,52 +148,8 @@ export const CHAPTERS = [
     },
   },
   {
-    id: 'track-record',
-    no: '04',
-    label: { en: 'Track record', am: 'የስራ ልምድ' },
-    heading: {
-      en: 'Eleven projects.\nTen years.',
-      am: '11 ፕሮጀክት።\n10 ዓመት።',
-    },
-    body: {
-      en:
-        'Delivered across Atena Tera, Ayat, Lebu and Lafto - and now a ShebaMiles ' +
-        'partner in our tenth anniversary year.',
-      am:
-        'በአጤና ተራ፣ በአያት፣ በለቡ እና በላፍቶ አስረክበናል - በአስረኛ ዓመታችን የShebaMiles አጋር ሆነናል።',
-    },
-    delivered: [
-      {
-        name: 'AGT Trading',
-        place: { en: 'Atena Tera', am: 'አጤና ተራ' },
-        detail: '2B+G+5',
-        area: '603 m²',
-      },
-      { name: 'MAW', place: { en: 'Ayat', am: 'አያት' }, detail: 'B+G+11', area: '822 m²' },
-      { name: '2MA', place: { en: 'Lebu', am: 'ለቡ' }, detail: 'B+G+9', area: '1,080 m²' },
-      {
-        name: 'Mohammed.S',
-        place: { en: 'Lafto', am: 'ላፍቶ' },
-        detail: '2B+G+6',
-        area: '750 m²',
-      },
-    ],
-    // Swings to the opposite side rather than climbing overhead. A top-down
-    // shot at this point just showed the flat roof and its plant equipment.
-    camera: {
-      position: [-11.5, 7.5, 13.0],
-      target: [0, 5.6, 0],
-      fov: 40,
-    },
-    cameraMobile: {
-      position: [-10.53, 7.68, 15.47],
-      target: [0, 4.5, 0],
-      fov: 52,
-    },
-  },
-  {
     id: 'contact',
-    no: '05',
+    no: '04',
     label: { en: 'Speak to Wonde', am: 'ወንደሰንን ያግኙ' },
     heading: {
       en: 'Talk to someone\nwho picks up.',

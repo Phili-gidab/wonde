@@ -58,10 +58,10 @@ function ContactBlock() {
 
 function Chapter({ data, active }) {
   const { t, other } = useLang()
-  const { no, label, heading, body, stats, sites, delivered } = data
+  const { no, label, heading, body, stats, sites } = data
 
   return (
-    <section id={data.id} className={`ch${active ? ' is-active' : ''}${data.feed ? ' ch-wide' : ''}`} aria-label={t(label)}>
+    <section id={data.id} style={data.feed ? { position: "relative" } : undefined} className={`ch${active ? ' is-active' : ''}${data.feed ? ' ch-wide' : ''}`} aria-label={t(label)}>
       <div className="ch-inner">
         <p className="ch-tag">
           <span className="ch-no">CH.{no}</span>
@@ -70,14 +70,21 @@ function Chapter({ data, active }) {
           <span className="ch-label-am">{other(label)}</span>
         </p>
 
-        <Heading text={t(heading)} />
+        {/* The listings chapter opens straight onto the carousel - the posts
+            carry their own titles, prices and copy, so the display heading
+            and intro would just be a wall of type in front of them. */}
+        {!data.feed && (
+          <>
+          <Heading text={t(heading)} />
 
-        {/*
-          The accent line is always the heading in the *other* language, so the
-          page stays visibly bilingual whichever way it is being read.
-        */}
-        <p className="ch-am">{other(heading).replace('\n', ' ')}</p>
-        <p className="ch-body">{t(body)}</p>
+          {/*
+            The accent line is always the heading in the *other* language, so the
+            page stays visibly bilingual whichever way it is being read.
+          */}
+          <p className="ch-am">{other(heading).replace('\n', ' ')}</p>
+          <p className="ch-body">{t(body)}</p>
+          </>
+        )}
 
         {stats && (
           <div className="ch-stats">
@@ -99,20 +106,6 @@ function Chapter({ data, active }) {
                 <span className="site-am">{other(site.name)}</span>
                 <span className="site-size">{site.size}</span>
                 <span className="site-note">{t(site.note)}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {delivered && (
-          <ul className="ch-delivered">
-            {delivered.map((project) => (
-              <li key={project.name}>
-                <span className="delivered-name">{project.name}</span>
-                <span className="delivered-place">{t(project.place)}</span>
-                <span className="delivered-detail">
-                  {project.detail} <span className="sep">/</span> {project.area}
-                </span>
               </li>
             ))}
           </ul>
