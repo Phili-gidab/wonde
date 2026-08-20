@@ -7,11 +7,11 @@
   scenes. All text sits in a left column over a white scrim so it stays
   legible against whatever the render happens to be doing behind it.
 
-  The page is white. Every colour is a token below, and the render behind it
-  is lit to match - see src/three/Scene.jsx. Two rules keep the two halves
-  consistent: text-weight amber is `--amber` (dark enough to read on white,
-  4.7:1), and brand-fill amber is `--amber-solid` (the poster orange, only
-  ever used as a background with `--on-amber` on top).
+  The page is white and the accent is the brand green, off the Temer mark.
+  The render behind it is lit to match - see src/three/Scene.jsx. One rule
+  keeps the two halves consistent: `--green` is the only colour type is ever
+  set in, and `--green-solid` is the only colour ever filled behind white
+  type. See the token block for why neither of them is the logo's own green.
 */
 
 :root {
@@ -23,23 +23,31 @@
   --ink-faint: #6b7683;
 
   /*
-    Two ambers, and they are not interchangeable. The poster orange is far too
-    light to set type in on white - 1.9:1 - so it survives only as a fill
-    (`--amber-solid`, always with `--on-amber` on top). Anything that is read
-    as text or drawn as a hairline uses `--amber`, which is the same hue burnt
-    down to 4.7:1. `--amber-soft` is the other-language accent line: deeper
-    still, so it reads as a warm ink rather than as a second highlight.
-  */
-  --amber: #a8640a;
-  --amber-soft: #8f5510;
-  --amber-solid: #f2a93b;
-  --on-amber: #231404;
+    The brand is white and green, off the Temer mark. One hue, four jobs, and
+    they are not interchangeable:
 
-  --blue: #2f6ea8;
+      --green        text and hairlines on white, at 5.1:1
+      --green-solid  fills that carry white type - the call bar, the phone ring
+      --green-deep   the second tier, so shops read as distinct from homes
+                     without introducing a second hue to the page
+      --green-chip   the tint behind an icon, pale enough to sit under a glyph
+
+    Nothing here is the bright yellow-green of the logo tile. At the size type
+    is set on this page that colour lands near 2:1 on white, which is a legal
+    problem before it is a taste one; the mark itself supplies the bright note,
+    and everything drawn in CSS holds the darker end of the same hue.
+  */
+  --green: #2e7d32;
+  --green-soft: #256428;
+  --green-solid: #2e7d32;
+  --green-deep: #14532d;
+  --green-chip: #e6f4ea;
+  --on-green: #ffffff;
+
   --line: rgba(18, 22, 29, 0.14);
   --line-soft: rgba(18, 22, 29, 0.07);
-  --amber-line: rgba(168, 100, 10, 0.3);
-  --amber-wash: rgba(242, 169, 59, 0.12);
+  --green-line: rgba(46, 125, 50, 0.3);
+  --green-wash: rgba(46, 125, 50, 0.09);
 
   /*
     Frosted panels. Sections below the fold sit over the same fixed canvas the
@@ -125,7 +133,7 @@ a {
       rgba(255, 255, 255, 0) 72%
     ),
     radial-gradient(ellipse 120% 80% at 50% 120%, rgba(255, 255, 255, 0.9), transparent 60%),
-    radial-gradient(ellipse 90% 60% at 70% -10%, rgba(146, 184, 222, 0.14), transparent 70%);
+    radial-gradient(ellipse 90% 60% at 70% -10%, rgba(46, 125, 50, 0.07), transparent 70%);
 }
 
 /* ── overlay: the scrolling document ───────────────────────────── */
@@ -188,32 +196,32 @@ a {
   font-size: 0.75rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--amber);
-  border: 1px solid var(--amber-line);
+  color: var(--green);
+  border: 1px solid var(--green-line);
   border-radius: 999px;
   padding: 0.5rem 1rem;
-  background: rgba(242, 169, 59, 0.1);
+  background: rgba(46, 125, 50, 0.1);
   backdrop-filter: blur(6px);
   transition: background 0.3s, border-color 0.3s;
 }
 
 .nav-call:hover {
-  background: rgba(242, 169, 59, 0.22);
-  border-color: rgba(168, 100, 10, 0.55);
+  background: rgba(46, 125, 50, 0.22);
+  border-color: rgba(46, 125, 50, 0.55);
 }
 
 .nav-call-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--amber);
-  box-shadow: 0 0 0 0 rgba(168, 100, 10, 0.6);
+  background: var(--green);
+  box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.6);
   animation: ping 2.4s ease-out infinite;
 }
 
 @keyframes ping {
-  0% { box-shadow: 0 0 0 0 rgba(168, 100, 10, 0.45); }
-  70%, 100% { box-shadow: 0 0 0 8px rgba(168, 100, 10, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.45); }
+  70%, 100% { box-shadow: 0 0 0 8px rgba(46, 125, 50, 0); }
 }
 
 /* chapter rail, right edge */
@@ -253,7 +261,7 @@ a {
 }
 
 .rail li.is-active a {
-  color: var(--amber);
+  color: var(--green);
 }
 
 .rail li.is-active .rail-label,
@@ -315,7 +323,7 @@ a {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--amber);
+  background: var(--green);
   transform: translateX(-100%);
   animation: sweep 2.2s ease-in-out infinite;
 }
@@ -368,7 +376,7 @@ a {
 }
 
 .ch-no {
-  color: var(--amber);
+  color: var(--green);
 }
 
 .ch-rule {
@@ -419,7 +427,7 @@ a {
   font-size: clamp(1.05rem, 2.3vw, 1.6rem);
   font-weight: 600;
   line-height: 1.5;
-  color: var(--amber-soft);
+  color: var(--green-soft);
   margin-bottom: clamp(1rem, 2.4vh, 1.6rem);
   opacity: 0;
   transform: translateY(14px);
@@ -485,7 +493,7 @@ a {
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
-  color: var(--amber);
+  color: var(--green);
 }
 
 .ch-stat-label {
@@ -514,16 +522,16 @@ a {
   align-items: center;
   gap: 1rem;
   padding: 0.9rem 1.6rem 0.9rem 0.9rem;
-  border: 1px solid var(--amber-line);
+  border: 1px solid var(--green-line);
   border-radius: 4px;
-  background: rgba(242, 169, 59, 0.12);
+  background: rgba(46, 125, 50, 0.12);
   backdrop-filter: blur(8px);
   transition: background 0.3s, border-color 0.3s, transform 0.3s;
 }
 
 .phone-plate:hover {
-  background: rgba(242, 169, 59, 0.24);
-  border-color: rgba(168, 100, 10, 0.6);
+  background: rgba(46, 125, 50, 0.24);
+  border-color: rgba(46, 125, 50, 0.6);
   transform: translateY(-2px);
 }
 
@@ -533,8 +541,8 @@ a {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: var(--amber-solid);
-  color: var(--on-amber);
+  background: var(--green-solid);
+  color: var(--on-green);
   flex-shrink: 0;
 }
 
@@ -548,7 +556,7 @@ a {
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--green);
 }
 
 .phone-plate-num {
@@ -573,7 +581,7 @@ a {
 .agent-am {
   font-family: var(--eth-display);
   font-size: 1.05rem;
-  color: var(--amber-soft);
+  color: var(--green-soft);
 }
 
 .agent-role {
@@ -606,55 +614,8 @@ a {
 }
 
 .btn:hover {
-  border-color: var(--amber-line);
-  background: var(--amber-wash);
-}
-
-/* ── assurances strip ──────────────────────────────────────────── */
-
-.assurances {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: var(--panel);
-  backdrop-filter: blur(10px);
-  padding: clamp(1.6rem, 4vh, 2.4rem) var(--gutter);
-}
-
-.assurances ul {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: clamp(1rem, 3vw, 2.5rem);
-}
-
-.assurances li {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  position: relative;
-  padding-left: 1.1rem;
-}
-
-.assurances li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.6em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--amber);
-}
-
-.assurance-en {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.assurance-am {
-  font-family: var(--eth);
-  font-size: 0.85rem;
-  color: var(--ink-faint);
+  border-color: var(--green-line);
+  background: var(--green-wash);
 }
 
 /* ── commercial ────────────────────────────────────────────────── */
@@ -673,7 +634,7 @@ a {
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--green);
   margin-bottom: 1rem;
 }
 
@@ -695,7 +656,7 @@ a {
 .commercial-am {
   font-family: var(--eth-display);
   font-size: clamp(1rem, 2vw, 1.3rem);
-  color: var(--amber-soft);
+  color: var(--green-soft);
   margin-top: 0.8rem;
 }
 
@@ -734,7 +695,7 @@ a {
 .project-am {
   font-family: var(--eth);
   font-size: 0.92rem;
-  color: var(--amber-soft);
+  color: var(--green-soft);
   margin-top: 0.2rem;
 }
 
@@ -823,7 +784,7 @@ a {
 }
 
 .unit-table tbody tr:hover {
-  background: rgba(242, 169, 59, 0.1);
+  background: rgba(46, 125, 50, 0.1);
 }
 
 .unit-table .num {
@@ -833,7 +794,7 @@ a {
 }
 
 .unit-table tbody tr:first-child .num:first-of-type {
-  color: var(--amber);
+  color: var(--green);
 }
 
 .unit-table-note {
@@ -850,10 +811,10 @@ a {
   gap: 0.7rem;
   margin-top: clamp(2rem, 5vh, 3rem);
   padding: 0.85rem 1.5rem;
-  border: 1px solid var(--amber-line);
+  border: 1px solid var(--green-line);
   border-radius: 3px;
-  background: rgba(242, 169, 59, 0.12);
-  color: var(--amber);
+  background: rgba(46, 125, 50, 0.12);
+  color: var(--green);
   font-family: var(--mono);
   font-size: 0.78rem;
   letter-spacing: 0.12em;
@@ -862,8 +823,8 @@ a {
 }
 
 .commercial-call:hover {
-  background: rgba(242, 169, 59, 0.24);
-  border-color: rgba(168, 100, 10, 0.55);
+  background: rgba(46, 125, 50, 0.24);
+  border-color: rgba(46, 125, 50, 0.55);
 }
 
 .commercial-call-num {
@@ -913,7 +874,7 @@ a {
   grid-column: 2;
   font-family: var(--mono);
   font-size: 0.72rem;
-  color: var(--amber);
+  color: var(--green);
   text-align: right;
 }
 
@@ -956,7 +917,7 @@ a {
 }
 
 .footer-contact a:hover {
-  color: var(--amber);
+  color: var(--green);
 }
 
 .footer-agent {
@@ -989,7 +950,7 @@ a {
 }
 
 .credit a:hover {
-  color: var(--amber);
+  color: var(--green);
 }
 
 /* ── mobile call bar ───────────────────────────────────────────── */
@@ -1005,8 +966,8 @@ a {
   justify-content: center;
   gap: 0.6rem;
   padding: 0.95rem 1rem;
-  background: var(--amber-solid);
-  color: var(--on-amber);
+  background: var(--green-solid);
+  color: var(--on-green);
   box-shadow: 0 -8px 24px -12px rgba(18, 22, 29, 0.4);
   font-weight: 600;
   font-size: 0.95rem;
@@ -1069,11 +1030,11 @@ a {
 
 .loader-fill {
   height: 100%;
-  background: var(--amber);
+  background: var(--green);
   transform-origin: left;
   transition: transform 0.35s ease;
-  /* 1px of deep amber on white needs the extra weight to register. */
-  box-shadow: 0 0 0 0.5px var(--amber);
+  /* 1px of green on white needs the extra weight to register. */
+  box-shadow: 0 0 0 0.5px var(--green);
 }
 
 .loader-pct {
@@ -1199,7 +1160,7 @@ a {
 }
 
 .lang button.is-active {
-  color: var(--amber);
+  color: var(--green);
 }
 
 .lang-sep {
@@ -1223,6 +1184,8 @@ a {
 :root[data-lang='am'] .ch-heading,
 :root[data-lang='am'] .commercial h2,
 :root[data-lang='am'] .delivered h2,
+:root[data-lang='am'] .why h2,
+:root[data-lang='am'] .why-title,
 :root[data-lang='am'] .pillars-head h2,
 :root[data-lang='am'] .project-head h3,
 :root[data-lang='am'] .pillar-kind,
@@ -1240,10 +1203,11 @@ a {
 :root[data-lang='am'] .ch-body,
 :root[data-lang='am'] .commercial-body,
 :root[data-lang='am'] .delivered-body,
+:root[data-lang='am'] .why-body,
+:root[data-lang='am'] .why-text,
 :root[data-lang='am'] .built-note,
 :root[data-lang='am'] .delivered-stats dd,
 :root[data-lang='am'] .project-summary,
-:root[data-lang='am'] .assurance-en,
 :root[data-lang='am'] .site-note,
 :root[data-lang='am'] .built-place,
 :root[data-lang='am'] .ch-stat-label {
@@ -1254,10 +1218,11 @@ a {
 :root[data-lang='am'] .ch-am,
 :root[data-lang='am'] .commercial-am,
 :root[data-lang='am'] .delivered-am,
+:root[data-lang='am'] .why-am,
+:root[data-lang='am'] .why-title-am,
 :root[data-lang='am'] .built-place-am,
 :root[data-lang='am'] .project-am,
 :root[data-lang='am'] .footer-brand-am,
-:root[data-lang='am'] .assurance-am,
 :root[data-lang='am'] .ch-stat-am,
 :root[data-lang='am'] .ch-label-am,
 :root[data-lang='am'] .site-am {
@@ -1394,9 +1359,13 @@ a {
   poster artwork and slice the badges off the photos. A fixed-height filmstrip
   keeps every image whole and still reads as a tidy row.
 
-  The amber duotone is CSS, not baked into the files, so the hover/tap reveal
-  is a single property change rather than a second image download.
-  See scripts/media/posts.mjs.
+  The posters used to run through an amber duotone here, and return to their
+  own colours on hover. That existed for one reason: Temer's artwork is green
+  and gold, and on a near-black page with an orange accent it fought
+  everything around it. The page is white now and the accent is that same
+  green, so the posters are already in the palette - the grade was solving a
+  problem that no longer exists, and full colour is both cleaner and one less
+  thing to explain to the person looking at it.
 */
 
 .ch-wide .ch-inner {
@@ -1414,24 +1383,6 @@ a {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 0.9rem;
-}
-
-.feed-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-.feed-hint::before {
-  content: '';
-  width: 18px;
-  height: 1px;
-  background: var(--amber);
 }
 
 .feed-nav {
@@ -1454,9 +1405,9 @@ a {
 }
 
 .feed-nav button:hover:not(:disabled) {
-  border-color: rgba(168, 100, 10, 0.55);
-  background: var(--amber-wash);
-  color: var(--amber);
+  border-color: rgba(46, 125, 50, 0.55);
+  background: var(--green-wash);
+  color: var(--green);
 }
 
 .feed-nav button:disabled {
@@ -1465,7 +1416,7 @@ a {
 }
 
 .feed-nav button:focus-visible {
-  outline: 2px solid var(--amber);
+  outline: 2px solid var(--green);
   outline-offset: 2px;
 }
 
@@ -1506,14 +1457,13 @@ a {
   transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.post:hover,
-.post.is-revealed {
-  border-color: var(--amber-line);
+.post:hover {
+  border-color: var(--green-line);
   box-shadow: 0 1px 2px rgba(18, 22, 29, 0.06), 0 22px 46px -24px rgba(18, 22, 29, 0.45);
 }
 
 .post:focus-visible {
-  outline: 2px solid var(--amber);
+  outline: 2px solid var(--green);
   outline-offset: 2px;
 }
 
@@ -1526,14 +1476,6 @@ a {
   display: block;
   height: 100%;
   width: auto;
-  filter: grayscale(1) sepia(0.42) hue-rotate(-12deg) saturate(1.35)
-    brightness(1.04) contrast(0.94);
-  transition: filter 0.55s ease;
-}
-
-.post:hover .post-media img,
-.post.is-revealed .post-media img {
-  filter: none;
 }
 
 .post-kind {
@@ -1578,7 +1520,7 @@ a {
 .post-detail {
   font-family: var(--mono);
   font-size: 0.7rem;
-  color: var(--amber);
+  color: var(--green);
   margin-top: 0.2rem;
 }
 
@@ -1609,13 +1551,13 @@ a {
 }
 
 .pillar {
-  border-top: 2px solid var(--amber);
+  border-top: 2px solid var(--green);
   padding-top: 1.4rem;
 }
 
 /* Shops take the cool accent so the two are distinguishable at a glance. */
 .pillar-shops {
-  border-top-color: var(--blue);
+  border-top-color: var(--green-deep);
 }
 
 .pillar-kind {
@@ -1679,11 +1621,11 @@ a {
 .pillar-site-note {
   font-family: var(--mono);
   font-size: 0.72rem;
-  color: var(--amber);
+  color: var(--green);
 }
 
 .pillar-shops .pillar-site-note {
-  color: var(--blue);
+  color: var(--green-deep);
 }
 
 .pillar-cta {
@@ -1696,7 +1638,7 @@ a {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
-  border-bottom: 1px solid var(--amber-line);
+  border-bottom: 1px solid var(--green-line);
   padding-bottom: 0.25rem;
   transition: color 0.3s;
 }
@@ -1706,7 +1648,7 @@ a {
 }
 
 .pillar-cta:hover {
-  color: var(--amber);
+  color: var(--green);
 }
 
 @media (max-width: 640px) {
@@ -1715,8 +1657,7 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .post,
-  .post-media img {
+  .post {
     transition: none;
   }
   .feed {
@@ -1763,10 +1704,6 @@ a {
     height: clamp(14rem, 30vh, 18rem);
   }
 
-  .feed-hint {
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
-  }
 }
 
 /*
@@ -1777,11 +1714,6 @@ a {
 @media (max-width: 640px) {
   .feed-nav {
     display: none;
-  }
-
-  .feed-hint {
-    font-size: 0.64rem;
-    letter-spacing: 0.1em;
   }
 }
 
@@ -1806,7 +1738,7 @@ a {
 }
 
 .post-open:focus-visible {
-  outline: 2px solid var(--amber);
+  outline: 2px solid var(--green);
   outline-offset: 2px;
 }
 
@@ -1836,9 +1768,8 @@ a {
   content: ' \2192';
 }
 
-.post:hover .post-more,
-.post.is-revealed .post-more {
-  color: var(--amber);
+.post:hover .post-more {
+  color: var(--green);
 }
 
 /* ── lightbox: the post's own words ────────────────────────────── */
@@ -1915,9 +1846,9 @@ a {
 }
 
 .lb-close:hover {
-  border-color: rgba(168, 100, 10, 0.55);
-  background: rgba(242, 169, 59, 0.24);
-  color: var(--amber);
+  border-color: rgba(46, 125, 50, 0.55);
+  background: rgba(46, 125, 50, 0.24);
+  color: var(--green);
 }
 
 .lb-meta {
@@ -1933,7 +1864,7 @@ a {
   font-size: 0.62rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--green);
 }
 
 .lb-title {
@@ -1976,7 +1907,7 @@ a {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--amber);
+  background: var(--green);
 }
 
 .lb-foot {
@@ -2015,9 +1946,9 @@ a {
 }
 
 .lb-nav button:hover {
-  border-color: rgba(168, 100, 10, 0.55);
-  background: var(--amber-wash);
-  color: var(--amber);
+  border-color: rgba(46, 125, 50, 0.55);
+  background: var(--green-wash);
+  color: var(--green);
 }
 
 /* ── the pitch, in Wonde's words, on the shop cards ────────────── */
@@ -2046,7 +1977,7 @@ a {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--blue);
+  background: var(--green-deep);
 }
 
 @media (max-width: 820px) {
@@ -2161,7 +2092,7 @@ a {
 .feed-bar i {
   display: block;
   height: 100%;
-  background: var(--amber);
+  background: var(--green);
   transform-origin: left;
   transform: scaleX(0);
 }
@@ -2247,7 +2178,7 @@ a {
 .delivered-am {
   font-family: var(--eth-display);
   font-size: clamp(1rem, 2vw, 1.3rem);
-  color: var(--amber-soft);
+  color: var(--green-soft);
   margin-top: 0.8rem;
 }
 
@@ -2271,7 +2202,7 @@ a {
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
-  color: var(--amber);
+  color: var(--green);
 }
 
 .delivered-stats dd {
@@ -2284,32 +2215,38 @@ a {
 }
 
 /*
-  Two columns, start-aligned, and every image keeps its own aspect ratio. The
-  four photographs are 1000x520, 1000x497, 1000x497 and 1000x837, and each has
-  a green Temer badge burned into its lower left carrying the name, location
-  and built-up area. Cropping them to a uniform box cuts those badges in half,
-  which reads as a mistake rather than as a design - so the cards are allowed
-  to be different heights instead.
+  Masonry, via CSS columns, and every image keeps its own aspect ratio.
+
+  The four photographs are 1000x520, 1000x497, 1000x497 and 1000x837, and each
+  carries a green Temer badge burned into its lower left with the name,
+  location and built-up area. Cropping them to a uniform box cuts those badges
+  in half, which reads as a mistake rather than as a design.
+
+  That rules out a uniform grid - but a plain two-column grid is no better:
+  rows align to the tallest cell, so the one portrait photograph left about
+  250px of white beside its neighbour. Columns pack by height instead, so the
+  gap disappears without a single pixel being cropped. The cost is that
+  reading order runs down each column rather than across, which for four
+  independent photographs is no cost at all.
 
   Capped rather than full-bleed: the sources are 1000px wide, and past about
   600px on screen they visibly soften.
 */
 .delivered-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.8rem, 4vw, 3rem);
-  align-items: start;
+  columns: 1;
+  column-gap: clamp(1.8rem, 4vw, 3rem);
   max-width: 76rem;
 }
 
 @media (min-width: 860px) {
   .delivered-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    columns: 2;
   }
 }
 
 .built {
-  margin: 0;
+  break-inside: avoid;
+  margin: 0 0 clamp(1.8rem, 4vw, 3rem);
 }
 
 .built-media {
@@ -2380,7 +2317,7 @@ a {
   font-family: var(--eth);
   letter-spacing: 0;
   text-transform: none;
-  color: var(--amber-soft);
+  color: var(--green-soft);
 }
 
 /* Floors and area ride the right edge, across both caption rows. */
@@ -2400,7 +2337,7 @@ a {
 
 .built-area {
   font-size: 0.74rem;
-  color: var(--amber);
+  color: var(--green);
 }
 
 .built-note {
@@ -2426,4 +2363,164 @@ a {
     transform: none;
     transition: none;
   }
+}
+
+/* ── why choose Temer: the six advantages ──────────────────────── */
+
+/*
+  The persuading section. Everything above it is inventory and everything
+  below it is detail, so it gets the most air on the page and the only tinted
+  chips in the design.
+
+  It replaces the four-item assurances strip that used to sit here. That strip
+  made the same argument in the same place, four claims to this one's six, and
+  every claim it carried is inside these cards now - see the note on WHY in
+  src/content.js for which went where.
+*/
+.why {
+  padding: clamp(4.5rem, 12vh, 8rem) var(--gutter);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+}
+
+.why-head {
+  max-width: 46rem;
+  margin-bottom: clamp(2.4rem, 6vh, 3.6rem);
+}
+
+.why h2 {
+  font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.why-am {
+  font-family: var(--eth-display);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--green-soft);
+  margin-top: 0.8rem;
+}
+
+.why-body {
+  margin-top: 1rem;
+  color: var(--ink-dim);
+  max-width: 48ch;
+}
+
+/*
+  Three across, then two, then one - and the counts are explicit rather than
+  left to `auto-fit`. Six divides evenly into all three, so no row is ever
+  left holding an orphan; auto-fit with a 17rem floor was picking four on a
+  1600px viewport, which stranded two cards on a row of their own.
+*/
+.why-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2.2vw, 1.6rem);
+  max-width: 82rem;
+}
+
+@media (min-width: 640px) {
+  .why-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
+  .why-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.why-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.6vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.04), 0 14px 34px -22px rgba(18, 22, 29, 0.3);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--green-line);
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.05), 0 22px 44px -22px rgba(18, 22, 29, 0.35);
+}
+
+/* The one place the brand tint is used as a surface rather than as ink. */
+.why-chip {
+  display: grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 12px;
+  background: var(--green-chip);
+  color: var(--green);
+  margin-bottom: 1.3rem;
+}
+
+.why-title {
+  font-size: 1.12rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.why-title-am {
+  font-family: var(--eth);
+  font-size: 0.86rem;
+  color: var(--green-soft);
+  margin-top: 0.2rem;
+}
+
+.why-text {
+  margin-top: 0.75rem;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 560px) {
+  .why-card {
+    padding: 1.3rem;
+  }
+
+  .why-chip {
+    width: 2.7rem;
+    height: 2.7rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .why-card,
+  .why-card:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* The delivery photograph is a button now - it opens the gallery lightbox. */
+.built-open {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.built-open:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+  border-radius: 6px;
 }

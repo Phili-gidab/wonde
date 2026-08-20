@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { POSTS, UI } from '../content.js'
 import { useLang } from '../i18n.jsx'
+import Chevron from './Chevron.jsx'
 
 /**
  * Chapter 3 - the listings.
@@ -20,11 +21,11 @@ import { useLang } from '../i18n.jsx'
  *    ratio (1000x1250 and 1000x1000); a uniform box crops the artwork and
  *    slices the badges off.
  *
- * 2. The posters are green and gold on a white page, and nine of them side by
- *    side read as nine unrelated adverts. They render in a light warm duotone
- *    and return to their real colours on hover or tap. That grade is CSS, not
- *    baked into the files - reversing a filter is free, baking it would mean
- *    shipping every image twice.
+ * 2. They run in full colour. There used to be an amber duotone here that
+ *    lifted on hover, because Temer's green-and-gold artwork fought a
+ *    near-black page with an orange accent. The page is white now and the
+ *    accent is that same green, so the posters are already in the palette and
+ *    the grade was solving a problem that no longer exists.
  */
 
 /** Some fields are plain strings (proper nouns); others are {en, am} pairs. */
@@ -32,21 +33,7 @@ function text(value, t) {
   return typeof value === 'string' ? value : t(value)
 }
 
-function Chevron({ back = false }) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d={back ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function Post({ post, index, revealed, onReveal, onOpen }) {
+function Post({ post, index, onOpen }) {
   const { t } = useLang()
 
   const title = text(post.title, t)
@@ -55,12 +42,11 @@ function Post({ post, index, revealed, onReveal, onOpen }) {
   const kind = t(UI.offerNow)
 
   return (
-    <figure className={`post${revealed ? ' is-revealed' : ''}`}>
+    <figure className="post">
       <button
         type="button"
         className="post-open"
         onClick={onOpen}
-        onMouseEnter={onReveal}
         aria-label={`${title}, ${place}. ${t(UI.readPost)}`}
       >
         <span className="post-media">
@@ -197,7 +183,6 @@ export default function Feed() {
   const pinned = useCanPin()
   const { offset, progress } = usePinnedStrip(section, track, pinned)
 
-  const [revealed, setRevealed] = useState(null)
   const [current, setCurrent] = useState(null)
   const [edges, setEdges] = useState({ start: true, end: false })
 
@@ -246,8 +231,6 @@ export default function Feed() {
     <div className={`feed-wrap${pinned ? " is-pinned" : ""}`} ref={section}>
       <div className="feed-pin">
       <div className="feed-head">
-        <p className="feed-hint">{t(UI.trueColour)}</p>
-
         {pinned ? (
           <div className="feed-rail" aria-hidden="true">
             <span className="feed-count">
@@ -277,14 +260,7 @@ export default function Feed() {
         style={pinned ? { transform: `translate3d(${offset}px, 0, 0)` } : undefined}
       >
         {POSTS.map((item, index) => (
-          <Post
-            key={item.id}
-            post={item}
-            index={index}
-            revealed={revealed === item.id}
-            onReveal={() => setRevealed(item.id)}
-            onOpen={() => openAt(index)}
-          />
+          <Post key={item.id} post={item} index={index} onOpen={() => openAt(index)} />
         ))}
       </div>
       </div>

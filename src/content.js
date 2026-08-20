@@ -3,7 +3,7 @@
  *
  * Every translatable value is an `{ en, am }` pair, resolved through `t()` in
  * src/i18n.jsx. Whichever language is active, the *other* one is rendered
- * underneath the heading as an amber display accent - so the page reads as a
+ * underneath the heading as a green display accent - so the page reads as a
  * bilingual object rather than as a translation of itself.
  *
  * Figures come from Wonde's own sales material. Keep them here rather than
@@ -22,7 +22,6 @@ export const UI = {
   scroll: { en: 'Scroll', am: 'ወደ ታች' },
   salesConsultant: { en: 'Sales consultant', am: 'የሽያጭ አማካሪ' },
   chapters: { en: 'Chapters', am: 'ክፍሎች' },
-  whatYouGet: { en: 'What you get', am: 'የሚያገኙት' },
   askAboutUnit: { en: 'Ask Wonde about a unit', am: 'ስለ ሱቅ ወንደሰንን ይጠይቁ' },
   allFiguresBirr: { en: 'All figures in birr.', am: 'ሁሉም ዋጋዎች በብር ናቸው።' },
   rightsReserved: {
@@ -35,7 +34,6 @@ export const UI = {
   close: { en: "Close", am: "ዝጋ" },
   prev: { en: 'Previous', am: 'ወደ ኋላ' },
   next: { en: 'Next', am: 'ወደ ፊት' },
-  trueColour: { en: "Tap a card for its real colours", am: "ትክክለኛ ቀለም ለማየት ካርዱን ይንኩ" },
   viewHomes: { en: "See homes", am: "ቤቶችን ይመልከቱ" },
   viewShops: { en: "See shops", am: "ሱቆችን ይመልከቱ" },
   unitTable: {
@@ -153,12 +151,8 @@ export const CHAPTERS = [
       am: 'ስልክ ለሚያነሳ\nሰው ይደውሉ።',
     },
     body: {
-      en:
-        'Wonde handles the whole process end to end - unit selection, payment ' +
-        'schedule and paperwork. Buying from abroad? Documents go out by DHL.',
-      am:
-        'ወንደሰን ከመጀመሪያ እስከ መጨረሻ ያስተናግድዎታል - ቤት መምረጥ፣ የክፍያ ሰሌዳ እና ሰነዶች። ' +
-        'ከሀገር ውጭ ነዎት? ሰነዶቹን ባሉበት በDHL እንልካለን።',
+      en: 'One number, one person, from the first call to the handover.',
+      am: 'ከመጀመሪያው ጥሪ እስከ ርክክብ ድረስ - አንድ ስልክ፣ አንድ ሰው።',
     },
     camera: {
       position: [11.5, 4.0, 13.5],
@@ -173,16 +167,115 @@ export const CHAPTERS = [
   },
 ]
 
-/** Running strip under the chapters. */
-export const ASSURANCES = [
-  {
-    en: 'No price increase on the balance',
-    am: 'በቀሪ ክፍያ ላይ ጭማሪ የለም',
+/**
+ * Why choose Temer - six advantages, as a card grid.
+ *
+ * This replaces the four-item assurances strip that used to run here. That
+ * strip said "no price increase on the balance", "gated compound, up to 35%
+ * off", "DHL documents for diaspora" and "ShebaMiles partner" - four claims
+ * about why you would buy from Temer, which is exactly what this section is.
+ * Running both put the same four facts on screen twice, a screen apart. Every
+ * one of them is carried below: the balance in `investment`, the compound in
+ * `security`, DHL and ShebaMiles in `customer`, the discount in `price`.
+ *
+ * The six headings are the client's, and fixed. The bodies are written from
+ * figures that already appear elsewhere on this page rather than from the
+ * generic copy they arrived with, so a buyer who reads both does not find two
+ * different sets of numbers.
+ *
+ * `icon` keys an inline SVG in src/components/Why.jsx. Adding an item means
+ * adding an icon there; an unknown key renders no glyph rather than throwing.
+ */
+export const WHY = {
+  eyebrow: { en: 'Our advantages', am: 'ጥቅሞቻችን' },
+  heading: { en: 'Why choose Temer.', am: 'ለምን ቴምርን ይምረጡ።' },
+  body: {
+    en:
+      'Eleven projects completed and handed over in ten years, and two sites ' +
+      'selling now. This is what you are buying into.',
+    am:
+      'ቴምር በ10 ዓመት ውስጥ 11 ፕሮጀክቶች አጠናቆ አስረክቧል። ' +
+      'ሁለት ሳይቶች አሁን በሽያጭ ላይ ናቸው።',
   },
-  { en: 'Gated compound, up to 35% off', am: 'ግቢ ቤት እስከ 35% ቅናሽ' },
-  { en: 'DHL documents for diaspora', am: 'ለዲያስፖራ ሰነድ በDHL' },
-  { en: 'ShebaMiles partner', am: 'የShebaMiles አጋር' },
-]
+  items: [
+    {
+      id: 'location',
+      icon: 'pin',
+      title: { en: 'Prime location', am: 'ምርጥ አካባቢ' },
+      body: {
+        en:
+          'Sarbet Adebabay and Megenagna Diaspora Adebabay - two live sites on ' +
+          'major roundabouts, with retail at Piyassa and Kaliti.',
+        am:
+          'ሳር ቤት አደባባይ እና መገናኛ ዲያስፖራ አደባባይ - በሁለት ዋና አደባባዮች ላይ። ' +
+          'ሱቆችም በፒያሳ እና በቃሊቲ።',
+      },
+    },
+    {
+      id: 'price',
+      icon: 'price',
+      title: { en: 'Affordable price', am: 'ተመጣጣኝ ዋጋ' },
+      body: {
+        en:
+          '4.6 million birr all in, at 130,000 birr per square metre, with ' +
+          'discounts of up to 35%.',
+        am: 'በጠቅላላ 4.6 ሚልዮን ብር፤ 130,000 ብር በካሬ፤ እስከ 35% ቅናሽ።',
+      },
+    },
+    {
+      id: 'quality',
+      icon: 'quality',
+      title: { en: 'Premium quality', am: 'ከፍተኛ ጥራት' },
+      body: {
+        en:
+          'Handed over complete and on schedule. Eleven buildings finished in ' +
+          'ten years, not one of them left as a shell.',
+        am:
+          'ጥንቅቅ ተደርገው በጊዜው ይረከባሉ። ' +
+          'ቴምር በ10 ዓመት ውስጥ 11 ህንፃዎችን አጠናቋል።',
+      },
+    },
+    {
+      id: 'customer',
+      icon: 'customer',
+      title: { en: 'Customer first', am: 'ደንበኛ ቅድሚያ' },
+      body: {
+        en:
+          'Wonde takes it end to end - unit selection, payment schedule and ' +
+          'paperwork. Buying from abroad? Documents go out by DHL, and Temer ' +
+          'is a ShebaMiles partner.',
+        am:
+          'ወንደሰን ከመጀመሪያ እስከ መጨረሻ ያስተናግድዎታል - ቤት መምረጥ፣ የክፍያ ሰሌዳ እና ሰነዶች። ' +
+          'ከሀገር ውጭ ነዎት? ሰነዶቹን ባሉበት በDHL እንልካለን፤ ቴምር የShebaMiles አጋር ነው።',
+      },
+    },
+    {
+      id: 'investment',
+      icon: 'investment',
+      title: { en: 'Smart investment', am: 'ብልህ ኢንቨስትመንት' },
+      body: {
+        en:
+          'Pay 40% now and 60% on handover, with no price increase on the ' +
+          'balance. Whatever the price does in between is yours.',
+        am:
+          '40% ቅድመ ክፍያ እና 60% ሲረከቡ፤ ' +
+          'በቀሪ ክፍያ ላይ የዋጋ ጭማሪ የለም።',
+      },
+    },
+    {
+      id: 'security',
+      icon: 'security',
+      title: { en: 'Safety and security', am: 'ጥበቃና ደህንነት' },
+      body: {
+        en:
+          'Gated compounds with controlled access and round-the-clock ' +
+          'security on every site.',
+        am:
+          'ጥበቃ ያለው ግቢ ቤት፤ ቁጥጥር የሚደረግበት መግቢያ እና የ24 ሰዓት ደህንነት።',
+      },
+    },
+  ],
+}
 
 /**
  * Commercial inventory. Two live projects with per-unit pricing, so a buyer

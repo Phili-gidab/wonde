@@ -12,9 +12,15 @@ rather than a scene swap. Copy is English-primary with Amharic as a display
 accent.
 
 Page order: four scroll-bound chapters (arrival, the offer, the listings
-strip, contact), then homes-and-shops, then **delivered** - the buildings that
-are already finished and handed over - then the assurances strip, the
-commercial inventory and the footer.
+strip, contact), then homes-and-shops, then **why choose Temer** - six
+advantages as a card grid - then the **delivery gallery** of buildings already
+finished and handed over, then the commercial inventory and the footer.
+
+The argument sits above its evidence deliberately: Why is the claim, and the
+gallery underneath it is what backs the claim up. Both replaced things that
+said less in the same place - Why replaced a four-item assurances strip making
+the same case in a thinner form, and the gallery replaced four cards that had
+been mixed in with the offer posters in the listings carousel.
 
 ## Development
 
@@ -119,7 +125,7 @@ English and Amharic, switchable from the header and persisted to
 
 Every translatable string in `src/content.js` is an `{ en, am }` pair.
 `src/i18n.jsx` exposes `t()` for the active language and `other()` for the
-opposite one - `other()` is what renders the amber accent line under each
+opposite one - `other()` is what renders the green accent line under each
 heading, so whichever language you read, the other sits beneath it. Adding
 copy means adding both halves of the pair; there is no fallback chain to hide
 a missing translation behind.
@@ -136,13 +142,31 @@ grotesk at the same time.
 The page is white, and that is a constraint on the render as much as on the
 CSS. Two things to know before changing either half.
 
-**Two ambers, not interchangeable.** The brand orange (`#f2a93b`) sets at
-1.9:1 on white, so it survives only as a *fill* - `--amber-solid`, always with
-`--on-amber` on top of it (the call bar, the phone plate's ring). Anything
-read as text or drawn as a hairline uses `--amber` (`#a8640a`), the same hue
-burnt down to 4.7:1. `--amber-soft` is deeper again and belongs to the
-other-language accent line, so it reads as a warm ink rather than as a second
-highlight.
+**White and green, one hue.** The accent comes off the Temer mark. Four
+tokens, and they are not interchangeable:
+
+| token           | job                                                      |
+| --------------- | -------------------------------------------------------- |
+| `--green`       | text and hairlines on white, at 5.1:1                    |
+| `--green-solid` | fills that carry white type - the call bar, the phone ring |
+| `--green-deep`  | the second tier, so shops read as distinct from homes    |
+| `--green-chip`  | the tint behind an icon, pale enough to sit under a glyph |
+
+None of them is the bright yellow-green of the logo tile. At the size type is
+set on this page that colour lands near 2:1 on white, which is a legal problem
+before it is a taste one. The mark supplies the bright note; everything drawn
+in CSS holds the darker end of the same hue.
+
+`--green-deep` exists so the page never needs a second hue. The homes and
+shops pillars used to be told apart by green versus blue, which on a white
+page with a green brand read as two competing accents rather than one system.
+
+The palette was amber before this, and the listings carousel had a duotone to
+match: Temer's posters are green and gold, and on a near-black page with an
+orange accent they fought everything around them. The page is white now and
+the accent is that same green, so the posters are already in the palette. The
+grade is gone and they run in full colour - it was solving a problem that no
+longer exists.
 
 **The render is lit for the page, not the other way round.** It was a dusk
 shot - hot amber key, near-black ground, the building emerging out of the

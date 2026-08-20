@@ -1,10 +1,11 @@
-import { CHAPTERS, ASSURANCES, COMMERCIAL, UI } from '../content.js'
+import { CHAPTERS, COMMERCIAL, UI } from '../content.js'
 import { PHONE, PHONE_TEL, WHATSAPP, TELEGRAM, AGENT, AGENT_EN } from '../contact.js'
 import { useLang } from '../i18n.jsx'
 import PhoneIcon from './PhoneIcon.jsx'
 import Feed from './Feed.jsx'
 import Pillars from './Pillars.jsx'
 import Delivered from './Delivered.jsx'
+import Why from './Why.jsx'
 
 /**
  * The scroll track. Each chapter is one viewport tall; the fixed WebGL canvas
@@ -208,8 +209,9 @@ export default function Chapters({ chapter }) {
     <main className="chapters">
       {/*
         The camera path is measured against this element specifically - see
-        useScrollProgress. Keep the assurances, commercial section and footer
-        OUTSIDE it, or the path stretches across content that has no keyframes.
+        useScrollProgress. Keep everything below - Pillars, Why, Delivered,
+        the commercial section and the footer - OUTSIDE it, or the path
+        stretches across content that has no camera keyframes.
       */}
       <div className="chapter-track" id="chapter-track">
         {CHAPTERS.map((data, index) => (
@@ -219,18 +221,12 @@ export default function Chapters({ chapter }) {
 
       <Pillars />
 
-      <Delivered />
+      {/* What is for sale, then why you would buy it here, then the proof.
+          Why sits above Delivered deliberately: it is the argument, and the
+          gallery under it is the evidence for the argument. */}
+      <Why />
 
-      <div className="assurances" aria-label={t(UI.whatYouGet)}>
-        <ul>
-          {ASSURANCES.map((item) => (
-            <li key={item.en}>
-              <span className="assurance-en">{t(item)}</span>
-              <span className="assurance-am">{other(item)}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Delivered />
 
       <section className="commercial" id="commercial" aria-label={t(COMMERCIAL.eyebrow)}>
         <div className="commercial-head">
