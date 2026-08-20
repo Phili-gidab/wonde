@@ -1,4 +1,4 @@
-import { BRAND, MODEL_CREDIT, UI } from '../content.js'
+import { BRAND, UI } from '../content.js'
 import { PHONE, PHONE_TEL, WHATSAPP, TELEGRAM, AGENT, AGENT_EN } from '../contact.js'
 import { useLang } from '../i18n.jsx'
 
@@ -27,26 +27,15 @@ export default function Footer() {
         </div>
       </div>
 
+      {/*
+        The CC BY credit for the 3D model used to sit here. Removed at the
+        client's instruction - they attribute on social media instead. The
+        licence terms and what that trades off are in the README; the model is
+        still CC BY 4.0 and the obligation has not gone anywhere.
+      */}
       <div className="footer-legal">
         <span>
           © {new Date().getFullYear()} {t(BRAND.name)}. {t(UI.rightsReserved)}
-        </span>
-
-        {/*
-          CC-BY requires attribution for commercial use of the 3D model.
-          This credit is a licence condition - do not remove it. The model
-          title and author are proper nouns and stay untranslated.
-        */}
-        <span className="credit">
-          {t(UI.modelCredit.prefix)}{' '}
-          <a href={MODEL_CREDIT.authorUrl} target="_blank" rel="noopener noreferrer">
-            &ldquo;{MODEL_CREDIT.title}&rdquo;
-          </a>{' '}
-          {t(UI.modelCredit.by)} {MODEL_CREDIT.author}, {t(UI.modelCredit.licensed)}{' '}
-          <a href={MODEL_CREDIT.licenceUrl} target="_blank" rel="noopener noreferrer">
-            {MODEL_CREDIT.licence}
-          </a>
-          .
         </span>
       </div>
     </footer>

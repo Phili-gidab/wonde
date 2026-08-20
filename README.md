@@ -325,6 +325,28 @@ The 3D model is
 by **zigurat architecture studio**, licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-Commercial use is permitted **only with attribution**. The credit is rendered
-in the site footer (`src/components/Footer.jsx`, sourced from `MODEL_CREDIT` in
-`src/content.js`) and is a licence condition - do not remove it.
+Commercial use is permitted **only with attribution**.
+
+**The credit is no longer rendered on the site.** It sat in the footer until
+the client asked for it to come out, on the basis that they attribute on
+social media instead. That is their call, and this is what it trades off:
+CC BY 4.0 s.3(a) requires the credit to accompany the Licensed Material -
+"in any reasonable manner based on the medium", which for a website means
+somewhere a visitor to that website can actually find it. A post on another
+platform does not reach the person looking at this page, so as it stands the
+site is using the model commercially without carrying its attribution.
+
+Two ways back into compliance, both cheap, if it is ever wanted:
+
+- a small `Credits` link in the footer opening the same text, or
+- an `/attribution` page linked once from the footer.
+
+The licence also permits satisfying the condition with a link to a resource
+holding the information, so the link itself is enough - the full sentence
+does not have to be on screen.
+
+The text to use, wherever it ends up:
+
+> 3D model ["modern residential complex apartment building"](https://sketchfab.com/zigurat_architecture)
+> by zigurat architecture studio, licensed under
+> [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

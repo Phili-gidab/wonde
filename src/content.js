@@ -42,11 +42,6 @@ export const UI = {
     price: { en: 'Total price', am: 'ጠቅላላ ዋጋ' },
     down: { en: 'Down payment', am: 'ቅድመ ክፍያ' },
   },
-  modelCredit: {
-    prefix: { en: '3D model', am: 'የ3D ሞዴል' },
-    by: { en: 'by', am: 'በ' },
-    licensed: { en: 'licensed under', am: 'በፍቃድ' },
-  },
 }
 
 /**
@@ -641,15 +636,3 @@ export const POSTS = [
     ],
   },
 ]
-
-/**
- * CC-BY attribution for the 3D model. Required by the licence - the model is
- * free for commercial use only if the author is credited. Do not remove.
- */
-export const MODEL_CREDIT = {
-  title: 'modern residential complex apartment building',
-  author: 'zigurat architecture studio',
-  authorUrl: 'https://sketchfab.com/zigurat_architecture',
-  licence: 'CC BY 4.0',
-  licenceUrl: 'https://creativecommons.org/licenses/by/4.0/',
-}
