@@ -74,7 +74,7 @@ recentres it onto x/z = 0 with its base on y = 0.
 The model is exported standing on its site: a thick ceramic slab with paving
 laid over it, ending in a hard straight edge. Lit from the side it reads as a
 diorama on a plinth - the building looks like a scale model on a table rather
-than a building on ground. `Ground.jsx` substitutes a plane that fades out
+than a building on ground. `Ground.jsx` substitutes a shadow-only plane
 instead, and `Tower.jsx` removes the original in two passes:
 
 - `hideBasePlates()` hides whole meshes that are thin, low and cover most of
@@ -197,15 +197,44 @@ and, on a white page, its plane was visible: a 34-unit square of very faint
 grey with four hard edges, sitting on ground that otherwise fades out with no
 edge at all. The directional light's own shadow does the grounding now.
 
-The shadow-camera frustum covers 84 units, far wider than the building. This
-is not slack: a frustum smaller than the *visible ground* ends in a hard
-straight line where shadowing simply stops, and that line reads as a
-rectangular plinth under the tower. It is symmetric now - the old
-`32 x -8` bottom edge sat well inside the ground and was plainly visible once
-the page went white. The map is 2048² rather than 4096² precisely because it
-is re-rendered per frame, and `shadow-normalBias` is 0.07 rather than 0.02
+### One shadow, and no ground
+
+`Ground.jsx` is a `shadowMaterial` plane: it draws where the building blocks
+the key light and is fully transparent everywhere else. It is not a lit
+surface, and that is deliberate.
+
+A lit plane that fades out through an alpha map worked on a dark page, because
+the fade ran from near-black into black. On white it cannot. The cameras sit
+two units off the ground, and at that height the last ten units of a receding
+plane compress into roughly thirty pixels of screen - so any fade, however
+gentle in world space, arrives as a hard grey horizon ruled across the page.
+Fog used to cover it; pushing the fog out past the building, which it has to
+be or it bleaches the facade, took the cover away.
+
+The obvious next move is also wrong. A soft radial "contact pool" under the
+tower - unlit, circular, fading to nothing - supplies the occlusion the cast
+shadow cannot, because the cast shadow lands off to one side. But any disc
+large enough to see reads as a **second shadow**, and it was spotted as one
+immediately. One honest shadow beats two competing ones. If you add anything
+under the building, check it at chapter 01 on a real GPU before believing it.
+
+The shadow-camera frustum covers 84 units, far wider than the building, and it
+is symmetric. That is not slack: the frustum bounds where shadows exist at
+all, so an edge inside the frame clips the shadow along a straight line. The
+old `32 x -8` bottom edge did exactly that, and was plainly visible once the
+page went white. The map is 2048² rather than 4096² precisely because it is
+re-rendered per frame, and `shadow-normalBias` is 0.07 rather than 0.02
 because acne that was invisible against near-black is a field of grey speckle
 against white.
+
+Exposure sits **below** 1.0 (0.86). The building is faced in white brick,
+white ribbed panel and pale plaster - its own base-colour maps average 230 of
+255 - so on a white page it is white on white unless the render is graded
+down. Raising exposure to "brighten" it clips the lit faces to paper and takes
+the texture with them; the fix for a washed-out facade here is always less
+light, not more. For the same reason the fog starts at 34: the cameras are 17
+to 22 units out and the tower is 8 across, so anything nearer put haze on the
+far half of the facade, which is indistinguishable from a washed-out render.
 
 Do not add an `<SMAA/>` pass to the composer. It floods the console with
 `glBlitFramebuffer: Read and write depth stencil attachments cannot be the

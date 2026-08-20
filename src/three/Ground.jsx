@@ -1,61 +1,32 @@
-import { useEffect, useMemo } from 'react'
-import * as THREE from 'three'
-
 /**
- * Infinite-feeling ground.
+ * The ground, which is a shadow and nothing else.
  *
  * The GLB ships a site plate - a 12-triangle slab with the paving details laid
- * on top - which ends in a hard straight edge. Lit from the side against a dark
- * background it reads as a diorama on a plinth: the building looks like a model
- * on a table rather than a building on ground. Tower.jsx hides those plate
- * meshes and this stands in for them.
+ * on top - which ends in a hard straight edge. Lit from the side it reads as a
+ * diorama on a plinth: the building looks like a model on a table rather than
+ * a building on ground. Tower.jsx hides those plate meshes and this stands in
+ * for them.
  *
- * The trick is the alpha map: a radial falloff so the plane dissolves into the
- * background instead of terminating at an edge. There is no horizon line to
- * give the scale away.
+ * It used to stand in with a lit plane that faded out through an alpha map,
+ * which worked on a dark page because the fade ran from near-black into black.
+ * On white it cannot: the cameras sit two units off the ground, and at that
+ * height the last ten units of a receding plane compress into about thirty
+ * pixels of screen. Any fade, however gentle in world space, arrives as a hard
+ * grey horizon ruled across the page. Fog used to cover that, and pushing the
+ * fog out past the building - which it had to be, or it bleached the facade -
+ * took the cover away with it.
  *
- * The colour is a shade off the page white rather than white itself. Matching
- * the page exactly leaves the tower standing on nothing and the contact shadow
- * floating unattached; a few percent of grey is enough to read as ground and
- * still disappear into the document at the rim.
+ * So the plane keeps only the thing it was there for. `shadowMaterial` draws
+ * where the building blocks the key light and is fully transparent everywhere
+ * else, which puts the shadow on the page with no plane to see the edge of.
+ * No horizon, at any camera height or fog setting.
+ *
+ * There was briefly a soft radial "contact pool" under the tower here as well,
+ * for the occlusion a cast shadow cannot give you because it lands off to one
+ * side. Any disc large enough to see is read as a second shadow - the client
+ * spotted it immediately - and one honest shadow beats two competing ones.
  */
-
-/** White at centre, transparent at the rim, with an eased falloff. */
-function radialFadeTexture(size = 512) {
-  const data = new Uint8Array(size * size * 4)
-  const centre = (size - 1) / 2
-
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const dx = (x - centre) / centre
-      const dy = (y - centre) / centre
-      const distance = Math.min(1, Math.hypot(dx, dy))
-
-      // Hold opacity close to the building, then fall away. The fade must
-      // reach zero well before the geometry's rim (hence /0.45, not /0.9) or
-      // the circle's edge shows up as a hard curved horizon once the key light
-      // catches it. smoothstep keeps the gradient from banding.
-      const t = Math.max(0, Math.min(1, (distance - 0.06) / 0.45))
-      const alpha = 1 - t * t * (3 - 2 * t)
-
-      const i = (y * size + x) * 4
-      data[i] = 255
-      data[i + 1] = 255
-      data[i + 2] = 255
-      data[i + 3] = Math.round(alpha * 255)
-    }
-  }
-
-  const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat)
-  texture.needsUpdate = true
-  return texture
-}
-
-export default function Ground({ radius = 60, color = '#e9edf2' }) {
-  const alphaMap = useMemo(() => radialFadeTexture(512), [])
-
-  useEffect(() => () => alphaMap.dispose(), [alphaMap])
-
+export default function Ground({ radius = 60, color = '#22303f', opacity = 0.34 }) {
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
@@ -63,25 +34,10 @@ export default function Ground({ radius = 60, color = '#e9edf2' }) {
       receiveShadow
       // Render before the building's transparent glazing so it composites
       // correctly against it.
-      renderOrder={-1}
+      renderOrder={-2}
     >
       <circleGeometry args={[radius, 96]} />
-      {/*
-        Low metalness and high roughness on purpose. A polished ground picks up
-        the warm key light across its whole span and blows out to white, which
-        takes the contact shadow with it - and the shadow is what puts the
-        building on the ground.
-      */}
-      <meshStandardMaterial
-        color={color}
-        roughness={0.86}
-        metalness={0.05}
-        alphaMap={alphaMap}
-        transparent
-        depthWrite={false}
-        envMapIntensity={0.45}
-        side={THREE.FrontSide}
-      />
+      <shadowMaterial color={color} opacity={opacity} transparent depthWrite={false} />
     </mesh>
   )
 }

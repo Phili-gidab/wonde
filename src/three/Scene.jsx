@@ -22,7 +22,7 @@ import { sampleCameraPath, PORTRAIT_ASPECT } from './cameraPath.js'
  * face, and the ambient is deliberately not lifted far enough to fill it in.
  * Flatten that and the tower washes out into the white behind it.
  */
-const KEY = '#fff1dc'
+const KEY = '#ffeccd'
 const FILL = '#cfe1f4'
 const GROUND = '#f3f5f8'
 
@@ -90,20 +90,27 @@ function Studio() {
         scale={[14, 6, 1]}
         target={[0, 3, 0]}
       />
-      {/* the rest of the sky, bright and cool - this is what the glass sees */}
+      {/*
+        The rest of the sky. Deliberately not raised to match the key: an
+        environment of uniform brightness is what turns glazing into flat light
+        grey, because a mirror with nothing to reflect reflects an average. The
+        glass needs somewhere bright and somewhere dark, which is what the
+        strips below and the unlit lower hemisphere provide.
+      */}
       <Lightformer
-        intensity={2.2}
+        intensity={1.35}
         color={FILL}
         position={[8, 7, 6]}
         scale={[12, 10, 1]}
         target={[0, 4, 0]}
       />
       {/* narrow vertical strips read as window highlights on the glazing */}
-      <Lightformer intensity={2.2} color="#ffffff" position={[5, 6, -6]} scale={[0.6, 9, 1]} />
-      <Lightformer intensity={1.6} color="#ffffff" position={[-7, 5, 4]} scale={[0.4, 8, 1]} />
+      <Lightformer intensity={3.4} color="#ffffff" position={[5, 6, -6]} scale={[0.6, 9, 1]} />
+      <Lightformer intensity={2.6} color="#ffffff" position={[-7, 5, 4]} scale={[0.4, 8, 1]} />
+      <Lightformer intensity={2.2} color="#ffffff" position={[-3, 7, -7]} scale={[0.3, 10, 1]} />
       {/* overhead bounce */}
       <Lightformer
-        intensity={1.5}
+        intensity={1.1}
         color="#e8f1fa"
         position={[0, 14, 0]}
         rotation={[Math.PI / 2, 0, 0]}
@@ -117,15 +124,19 @@ function Lights() {
   return (
     <>
       {/*
-        Bright, but still directional. The ambient is up from 0.55 to 1.15 so
-        the facade is not a silhouette against a white page - but no higher,
-        because the shadowed face is the only thing separating the building
-        from the background now. There is still nothing filling the front.
+        On a dark page the building had to be the brightest thing in frame. On
+        a white one it has to be the *darkest*: a mid-toned mass on paper, not
+        white on white. That is the whole reason the ambient sits at 0.45 and
+        not the 1.15 it was first raised to - lifting it far enough to "read"
+        the facade lifted it past the page, and the tower dissolved into the
+        background it was supposed to stand against.
+
+        There is still nothing filling the front.
       */}
-      <hemisphereLight args={[FILL, GROUND, 1.15]} />
+      <hemisphereLight args={[FILL, GROUND, 0.45]} />
       <directionalLight
         position={[-9, 13, 7]}
-        intensity={2.9}
+        intensity={2.4}
         color={KEY}
         castShadow
         // The building rotates, so this re-renders every frame - 2048, not the
@@ -156,7 +167,7 @@ function Lights() {
         the background; on white it does the opposite job, keeping the back of
         the building from going flat where the page is brightest.
       */}
-      <directionalLight position={[10, 6, -9]} intensity={1.2} color={FILL} />
+      <directionalLight position={[10, 6, -9]} intensity={0.85} color={FILL} />
     </>
   )
 }
@@ -185,7 +196,12 @@ export default function Scene({ progress, reducedMotion, quality = 'high' }) {
       onPointerMove={onPointerMove}
       onCreated={({ gl, scene, camera }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 1.18
+        // The building is faced in white brick, white ribbed panel and pale
+        // plaster - its own textures average 230/255. On a white page that is
+        // white on white unless the render is graded down to let the material
+        // read, so exposure sits below 1 rather than above it. 1.18 clipped
+        // the lit faces to paper and took the base-colour maps with them.
+        gl.toneMappingExposure = 0.86
         // Handle for scripts/shoot.mjs to inspect framing. Harmless in prod.
         window.__stage = { scene, camera, THREE }
       }}
@@ -194,8 +210,15 @@ export default function Scene({ progress, reducedMotion, quality = 'high' }) {
         The fog colour is the page colour. That is what makes the ground
         dissolve into the document instead of ending somewhere - there is no
         horizon line and no visible edge to the render.
+
+        It must start beyond the building, though. The cameras sit 17 to 22
+        units out and the tower is 8 across, so anything nearer than about 30
+        puts haze on the far half of the facade - which on a white page is
+        indistinguishable from the building being washed out. Starting at 34
+        keeps the fog for the ground, where it is doing a job, and off the
+        subject, where it was only bleaching it.
       */}
-      <fog attach="fog" args={[GROUND, 20, 58]} />
+      <fog attach="fog" args={[GROUND, 34, 82]} />
 
       <Suspense fallback={null}>
         <Tower spin={reducedMotion ? 0 : 0.015} />

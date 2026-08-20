@@ -199,7 +199,10 @@ export default function Tower({ spin = 0.015, hidePlate = true }) {
   const model = useMemo(() => scene.clone(true), [scene])
 
   useLayoutEffect(() => {
-    const anisotropy = Math.min(8, gl.capabilities.getMaxAnisotropy())
+    // The facade is timber slats and brick coursing seen at grazing angles
+    // from almost every keyframe, which is exactly where anisotropy earns its
+    // keep - at 8 the slats mush into grey a third of the way up the tower.
+    const anisotropy = Math.min(16, gl.capabilities.getMaxAnisotropy())
     const dispose = enrichMaterials(model, { anisotropy })
 
     model.updateWorldMatrix(true, true)
