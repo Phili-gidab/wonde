@@ -129,11 +129,8 @@ export const CHAPTERS = [
       am: 'አሁን በሽያጭ\nላይ ያለው።',
     },
     body: {
-      en:
-        'The offers running at Sarbet and Megenagna, and buildings already handed ' +
-        'over that you can go and stand in front of.',
-      am:
-        'በሳር ቤት እና በመገናኛ ያሉ ቅናሾች፣ እንዲሁም ተጠናቀው የተረከቡ ህንፃዎች።',
+      en: 'The offers running right now at Sarbet and Megenagna.',
+      am: 'አሁን በሳር ቤት እና በመገናኛ ያሉ ቅናሾች።',
     },
     feed: true,
     camera: {
@@ -345,77 +342,107 @@ export const PILLARS = {
 }
 
 /**
- * Wonde's social posts, prepared by scripts/media/posts.mjs.
+ * Buildings already finished and handed over.
  *
- *  splits them into buildings already handed over (photographs) and
- * offers currently running (poster artwork). The feed renders both in an amber
- * duotone and reveals their true colours on hover or tap - see Feed.jsx.
+ * These four used to sit inside the listings carousel alongside the offer
+ * posters, where a finished building read as one more advert. They are the
+ * proof behind every figure on this page, so they have their own section and
+ * their photographs run in full colour - the carousel now carries the running
+ * offers only. Keep them here and not in POSTS, so the same building never
+ * appears twice on one page.
+ *
+ * The photographs are Wonde's own, with the name, location and built-up area
+ * burned into the artwork. The caption repeats all three as text, so they
+ * translate and so a screen reader can reach them.
+ *
+ * `id` is the image file: public/posts/<id>.webp.
  */
-export const POSTS = [
-  {
-    id: 'post-01', kind: 'built', w: 1000, h: 520,
-    title: 'AGT Trading',
-    place: { en: 'Atena Tera', am: 'አጤና ተራ' },
-    detail: '2B+G+5 · 603 m²',
-    lines: [
-      {
-        en: 'Handed over at Atena Tera - two basements plus ground and five floors, 603 m² built up.',
-        am: 'በአጤና ተራ ተረክቧል - 2 ምድር ቤት ከነግራውንድ እና 5 ፎቅ፣ 603 ካሬ የተሰራ።',
-      },
-      {
-        en: 'One of eleven projects Temer has completed and handed over in ten years.',
-        am: 'ቴምር በ10 ዓመት ውስጥ ካጠናቀቃቸው 11 ፕሮጀክቶች አንዱ።',
-      },
-    ],
+export const DELIVERED = {
+  eyebrow: { en: 'Delivered', am: 'የተረከብናቸው' },
+  heading: {
+    en: 'Finished, handed over,\nlived in.',
+    am: 'ተጠናቀው፣ ተረክበው፣\nእየተኖረባቸው።',
   },
-  {
-    id: 'post-02', kind: 'built', w: 1000, h: 497,
-    title: 'MAW',
-    place: { en: 'Ayat', am: 'አያት' },
-    detail: 'B+G+11 · 822 m²',
-    lines: [
-      {
-        en: 'Handed over at Ayat - basement plus ground and eleven floors, 822 m² built up.',
-        am: 'በአያት ተረክቧል - ምድር ቤት ከነግራውንድ እና 11 ፎቅ፣ 822 ካሬ የተሰራ።',
-      },
-      {
-        en: 'Finished complete and on schedule, which is what Temer is known for.',
-        am: 'ጥንቅቅ ተደርጎ በጊዜው ተጠናቋል፤ ቴምር የሚታወቅበት ይኸው ነው።',
-      },
-    ],
+  body: {
+    en:
+      'Eleven projects completed in ten years. Four of them are below - and ' +
+      'you can go and stand in front of any of them.',
+    am:
+      'በ10 ዓመት ውስጥ 11 ፕሮጀክቶች ተጠናቀዋል። ከእነዚህ አራቱ ከዚህ በታች አሉ - ' +
+      'ሄደው በአካል ማየት ይችላሉ።',
   },
-  {
-    id: 'post-03', kind: 'built', w: 1000, h: 497,
-    title: '2MA',
-    place: { en: 'Lebu', am: 'ለቡ' },
-    detail: 'B+G+9 · 1,080 m²',
-    lines: [
-      {
-        en: 'Handed over at Lebu - basement plus ground and nine floors, 1,080 m² built up.',
-        am: 'በለቡ ተረክቧል - ምድር ቤት ከነግራውንድ እና 9 ፎቅ፣ 1,080 ካሬ የተሰራ።',
-      },
-      {
-        en: 'You can go and stand in front of it. That is the point of showing these.',
-        am: 'ሄደው ማየት ይችላሉ። እነዚህን የምናሳይበት ምክንያትም ይኸው ነው።',
-      },
-    ],
-  },
-  {
-    id: 'post-04', kind: 'built', w: 1000, h: 837,
-    title: 'Mohammed.S',
-    place: { en: 'Lafto', am: 'ላፍቶ' },
-    detail: '2B+G+6 · 750 m²',
-    lines: [
-      {
-        en: 'Handed over at Lafto - two basements plus ground and six floors, 750 m² built up.',
-        am: 'በላፍቶ ተረክቧል - 2 ምድር ቤት ከነግራውንድ እና 6 ፎቅ፣ 750 ካሬ የተሰራ።',
-      },
-      {
-        en: 'Occupied and lived in - the lights in the windows are residents.',
+  stats: [
+    { value: '11', label: { en: 'Projects handed over', am: 'የተረከቡ ፕሮጀክቶች' } },
+    { value: '10', label: { en: 'Years building', am: 'ዓመታት በግንባታ' } },
+    // 603 + 822 + 1,080 + 750, the four below.
+    { value: '3,255', label: { en: 'm² across these four', am: 'ካሬ በእነዚህ አራቱ' } },
+  ],
+  /*
+    Order is a layout decision, not an editorial one. The grid is two columns
+    of un-cropped photographs, so a row is as tall as its taller card; with the
+    one portrait photograph last, its row left a 200px hole under the card
+    beside it and the section ended on that hole. Leading with it puts the
+    mismatch in the middle of the grid and leaves the two 1000x497 frames to
+    close the section level with each other.
+  */
+  sites: [    {
+      id: 'post-04', w: 1000, h: 837,
+      name: 'Mohammed.S',
+      place: { en: 'Lafto', am: 'ላፍቶ' },
+      spec: '2B+G+6',
+      area: '750 m²',
+      note: {
+        en: 'Occupied - the lights in the windows are residents.',
         am: 'ተይዞ እየተኖረበት ነው - በመስኮቶቹ የሚታየው ብርሃን የነዋሪዎች ነው።',
       },
-    ],
-  },
+    },
+    {
+      id: 'post-01', w: 1000, h: 520,
+      name: 'AGT Trading',
+      place: { en: 'Atena Tera', am: 'አጤና ተራ' },
+      spec: '2B+G+5',
+      area: '603 m²',
+      note: {
+        en: 'Two basements plus ground and five floors, on the market street.',
+        am: '2 ምድር ቤት ከነግራውንድ እና 5 ፎቅ፤ በገበያው መንገድ ላይ።',
+      },
+    },
+    {
+      id: 'post-02', w: 1000, h: 497,
+      name: 'MAW',
+      place: { en: 'Ayat', am: 'አያት' },
+      spec: 'B+G+11',
+      area: '822 m²',
+      note: {
+        en: 'Eleven floors, finished complete and on schedule.',
+        am: '11 ፎቅ፤ ጥንቅቅ ተደርጎ በጊዜው ተጠናቋል።',
+      },
+    },
+    {
+      id: 'post-03', w: 1000, h: 497,
+      name: '2MA',
+      place: { en: 'Lebu', am: 'ለቡ' },
+      spec: 'B+G+9',
+      area: '1,080 m²',
+      note: {
+        en: 'The largest of the four by built-up area.',
+        am: 'በተሰራ ስፋት ከአራቱ ትልቁ።',
+      },
+    },
+  ],
+}
+
+/**
+ * Wonde's social posts, prepared by scripts/media/posts.mjs.
+ *
+ * The offers currently running, as poster artwork. Buildings already handed
+ * over live in DELIVERED above, with their own section - they were in here
+ * once and the same four buildings then appeared twice on the page.
+ *
+ * The feed renders these in a light warm duotone and returns them to their
+ * real colours on hover or tap - see Feed.jsx.
+ */
+export const POSTS = [
   {
     id: 'post-05', kind: 'offer', w: 1000, h: 1250,
     title: { en: 'Sarbet', am: 'ሳር ቤት' },

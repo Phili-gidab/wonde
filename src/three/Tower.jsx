@@ -48,6 +48,104 @@ function visibleBounds(root) {
   return bounds
 }
 
+/**
+ * Cull the site paving, triangle by triangle.
+ *
+ * hideBasePlates() above works at mesh level and catches the thick ceramic
+ * slab. It cannot catch the paving laid on top of it, because `join` in
+ * scripts/model/geo.mjs groups meshes by material: the paving shares
+ * `06_-_Default` and `13_-_Brushed_Metal_2` with elements ten storeys up, so
+ * by the time three.js sees it, it is a few hundred triangles inside a mesh
+ * 8.5 units tall. Nothing about that mesh is thin, low or wide. The triangles
+ * are the only handle left.
+ *
+ * This did not matter while the page was near-black - the apron was the same
+ * value as the background. On white it is a pale slab that stops dead in a
+ * straight line a few units from the tower, which is the diorama-on-a-table
+ * read that Ground.jsx exists to prevent.
+ *
+ * Drops triangles that are entirely inside the bottom `depth` of the model and
+ * either face up, or are a flat sliver thinner than `sliver`. Two tests rather
+ * than one because the apron has two parts: the paved surface, which the
+ * orientation test catches, and the rim around its edge, which is vertical and
+ * survived it - leaving a hairline rectangle drawn on the ground where the
+ * surface used to be, which on white was still perfectly visible.
+ *
+ * Between them the two tests are what keeps this safe. The ground floor keeps
+ * its walls, columns and glazing: those faces run a full storey, so they reach
+ * above the cutoff and are never sliver-thin. What goes is the apron, its rim,
+ * and the lobby floor slab - which is only ever seen from above, by a camera
+ * that never goes there.
+ *
+ * Geometry is cloned before it is edited. `useGLTF` caches the loaded scene
+ * and `scene.clone(true)` shares geometry with it, so editing in place would
+ * follow the model into the next mount.
+ */
+function cullGroundPaving(model, bounds, { depth = 0.02, upness = 0.85, sliver = 0.005 } = {}) {
+  const size = bounds.getSize(new THREE.Vector3())
+  const cutoff = bounds.min.y + size.y * depth
+  const flat = size.y * sliver
+
+  const a = new THREE.Vector3()
+  const b = new THREE.Vector3()
+  const c = new THREE.Vector3()
+  const ab = new THREE.Vector3()
+  const ac = new THREE.Vector3()
+  const normal = new THREE.Vector3()
+
+  const edited = []
+
+  model.traverse((object) => {
+    if (!object.isMesh || !object.visible || !object.geometry) return
+
+    const geometry = object.geometry
+    const position = geometry.attributes.position
+    if (!position) return
+
+    const index = geometry.index
+    const count = index ? index.count : position.count
+    const keep = []
+
+    for (let i = 0; i < count; i += 3) {
+      const i0 = index ? index.getX(i) : i
+      const i1 = index ? index.getX(i + 1) : i + 1
+      const i2 = index ? index.getX(i + 2) : i + 2
+
+      a.fromBufferAttribute(position, i0).applyMatrix4(object.matrixWorld)
+      b.fromBufferAttribute(position, i1).applyMatrix4(object.matrixWorld)
+      c.fromBufferAttribute(position, i2).applyMatrix4(object.matrixWorld)
+
+      if (a.y < cutoff && b.y < cutoff && c.y < cutoff) {
+        ab.subVectors(b, a)
+        ac.subVectors(c, a)
+        normal.crossVectors(ab, ac)
+        const length = normal.length()
+        // Degenerate triangles have no meaningful normal; leave them be.
+        const facesUp = length > 1e-8 && Math.abs(normal.y) / length > upness
+        const isSliver = Math.max(a.y, b.y, c.y) - Math.min(a.y, b.y, c.y) < flat
+
+        if (facesUp || isSliver) continue
+      }
+
+      keep.push(i0, i1, i2)
+    }
+
+    if (keep.length === count) return
+
+    const clone = geometry.clone()
+    clone.setIndex(keep)
+    object.geometry = clone
+    edited.push({ object, geometry })
+  })
+
+  return function restore() {
+    for (const { object, geometry } of edited) {
+      object.geometry.dispose()
+      object.geometry = geometry
+    }
+  }
+}
+
 function hideBasePlates(model) {
   const modelBox = new THREE.Box3().setFromObject(model)
   const modelSize = modelBox.getSize(new THREE.Vector3())
@@ -112,6 +210,12 @@ export default function Tower({ spin = 0.015, hidePlate = true }) {
     // box.min.y at the plate's underside - the tower then sits ~0.6 units
     // above the ground plane and visibly floats.
     const box = visibleBounds(model)
+
+    // Paving comes off after the box is measured and before the model is
+    // scaled: it sits above the tower's own base, so removing it does not
+    // move box.min.y, and doing it here keeps the cutoff in the same
+    // unscaled space the box was measured in.
+    const restorePaving = hidePlate ? cullGroundPaving(model, box) : null
     const size = new THREE.Vector3()
     const centre = new THREE.Vector3()
     box.getSize(size)
@@ -125,6 +229,7 @@ export default function Tower({ spin = 0.015, hidePlate = true }) {
     model.position.set(-centre.x * scale, -box.min.y * scale, -centre.z * scale)
 
     return () => {
+      restorePaving?.()
       for (const object of hidden) object.visible = true
       dispose()
     }

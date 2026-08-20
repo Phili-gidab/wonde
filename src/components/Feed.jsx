@@ -5,6 +5,10 @@ import { useLang } from '../i18n.jsx'
 /**
  * Chapter 3 - the listings.
  *
+ * The offers currently running, as Temer's own poster artwork. Buildings
+ * already handed over are not in here: they have their own section further
+ * down (see Delivered.jsx), where they run large and in full colour.
+ *
  * A horizontal filmstrip; clicking a card opens a lightbox carrying that
  * post's full sales copy. That copy is what the client posts to Telegram and
  * it runs long - on the page it would bury the layout, so it lives one click
@@ -12,14 +16,15 @@ import { useLang } from '../i18n.jsx'
  *
  * Two design constraints:
  *
- * 1. Cards share one HEIGHT and keep their own width. The sources mix
- *    landscape aerials (1000x520) with portrait posters (1000x1250); a uniform
- *    box crops the poster artwork and slices the badges off the photos.
+ * 1. Cards share one HEIGHT and keep their own width. The posters are not one
+ *    ratio (1000x1250 and 1000x1000); a uniform box crops the artwork and
+ *    slices the badges off.
  *
- * 2. The posts are Temer's artwork in green and gold, which fights the page.
- *    They render in an amber duotone and return to their real colours on hover
- *    or tap. That grade is CSS, not baked into the files - reversing a filter
- *    is free, baking it would mean shipping every image twice.
+ * 2. The posters are green and gold on a white page, and nine of them side by
+ *    side read as nine unrelated adverts. They render in a light warm duotone
+ *    and return to their real colours on hover or tap. That grade is CSS, not
+ *    baked into the files - reversing a filter is free, baking it would mean
+ *    shipping every image twice.
  */
 
 /** Some fields are plain strings (proper nouns); others are {en, am} pairs. */
@@ -47,7 +52,7 @@ function Post({ post, index, revealed, onReveal, onOpen }) {
   const title = text(post.title, t)
   const place = text(post.place, t)
   const detail = text(post.detail, t)
-  const kind = post.kind === 'built' ? t(UI.handedOver) : t(UI.offerNow)
+  const kind = t(UI.offerNow)
 
   return (
     <figure className={`post${revealed ? ' is-revealed' : ''}`}>
@@ -312,7 +317,7 @@ export default function Feed() {
             </div>
 
             <div className="lb-meta">
-              <p className="lb-kind">{post.kind === 'built' ? t(UI.handedOver) : t(UI.offerNow)}</p>
+              <p className="lb-kind">{t(UI.offerNow)}</p>
               <h3 className="lb-title">{title}</h3>
               <p className="lb-place">{place}</p>
 

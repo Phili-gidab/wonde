@@ -4,6 +4,7 @@ import { useLang } from '../i18n.jsx'
 import PhoneIcon from './PhoneIcon.jsx'
 import Feed from './Feed.jsx'
 import Pillars from './Pillars.jsx'
+import Delivered from './Delivered.jsx'
 
 /**
  * The scroll track. Each chapter is one viewport tall; the fixed WebGL canvas
@@ -217,6 +218,8 @@ export default function Chapters({ chapter }) {
       </div>
 
       <Pillars />
+
+      <Delivered />
 
       <div className="assurances" aria-label={t(UI.whatYouGet)}>
         <ul>

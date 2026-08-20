@@ -1,7 +1,7 @@
 import { Suspense, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { ContactShadows, Environment, Lightformer } from '@react-three/drei'
-import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
+import { Environment, Lightformer } from '@react-three/drei'
+import { EffectComposer, Bloom, Noise } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
 import Tower from './Tower.jsx'
@@ -9,12 +9,22 @@ import Ground from './Ground.jsx'
 import { sampleCameraPath, PORTRAIT_ASPECT } from './cameraPath.js'
 
 /**
- * Dusk palette. Warm amber key against cool blue shadow, which is both the
- * flattering light for concrete and glass and a match for the brand accent.
+ * Daylight palette, for a white page.
+ *
+ * This scene was a dusk shot: a hot amber key against near-black, with the
+ * building emerging out of the dark. On white that inverts - the page is now
+ * the brightest thing in frame, so a dark render reads as a hole cut in the
+ * page. The light is late-morning instead: a warm white key, a bright sky
+ * fill, and a near-white ground that the fog dissolves into the page itself.
+ *
+ * Contrast now has to come from *shading* rather than from the background:
+ * the key stays firmly on one side so the building keeps a visibly darker
+ * face, and the ambient is deliberately not lifted far enough to fill it in.
+ * Flatten that and the tower washes out into the white behind it.
  */
-const KEY = '#ffc27a'
-const FILL = '#4d7ea8'
-const GROUND = '#0a0e14'
+const KEY = '#fff1dc'
+const FILL = '#cfe1f4'
+const GROUND = '#f3f5f8'
 
 /**
  * Drives the default camera along the scroll-bound path.
@@ -72,17 +82,17 @@ function CameraRig({ progress, reducedMotion, pointer }) {
 function Studio() {
   return (
     <Environment resolution={256} frames={1}>
-      {/* warm sky band, low and wide - the 'sunset' */}
+      {/* warm band low and wide - the sun's side of the sky */}
       <Lightformer
-        intensity={2.4}
+        intensity={2.1}
         color={KEY}
         position={[-6, 3, -8]}
         scale={[14, 6, 1]}
         target={[0, 3, 0]}
       />
-      {/* cool sky dome opposite */}
+      {/* the rest of the sky, bright and cool - this is what the glass sees */}
       <Lightformer
-        intensity={1.1}
+        intensity={2.2}
         color={FILL}
         position={[8, 7, 6]}
         scale={[12, 10, 1]}
@@ -93,8 +103,8 @@ function Studio() {
       <Lightformer intensity={1.6} color="#ffffff" position={[-7, 5, 4]} scale={[0.4, 8, 1]} />
       {/* overhead bounce */}
       <Lightformer
-        intensity={0.8}
-        color="#cfe2f2"
+        intensity={1.5}
+        color="#e8f1fa"
         position={[0, 14, 0]}
         rotation={[Math.PI / 2, 0, 0]}
         scale={[16, 16, 1]}
@@ -107,34 +117,46 @@ function Lights() {
   return (
     <>
       {/*
-        Deliberately dim and high-contrast. Lifting the ambient to "read" the
-        whole facade flattens it and loses the near-black mood the design is
-        built on - the building should emerge from the dark, not sit in a lit
-        room. Warm key, cool rim, and nothing filling the front.
+        Bright, but still directional. The ambient is up from 0.55 to 1.15 so
+        the facade is not a silhouette against a white page - but no higher,
+        because the shadowed face is the only thing separating the building
+        from the background now. There is still nothing filling the front.
       */}
-      <hemisphereLight args={[FILL, GROUND, 0.55]} />
+      <hemisphereLight args={[FILL, GROUND, 1.15]} />
       <directionalLight
         position={[-9, 13, 7]}
-        intensity={2.6}
+        intensity={2.9}
         color={KEY}
         castShadow
         // The building rotates, so this re-renders every frame - 2048, not the
         // 4096 that was affordable back when the map could be baked once.
         shadow-mapSize={[2048, 2048]}
-        shadow-bias={-0.0006}
-        shadow-normalBias={0.02}
+        // Acne on the ground plane was invisible at 0.02 against near-black
+        // and is a field of grey speckle against white.
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.07}
       >
         {/*
           The frustum must cover the whole *visible* ground, not just the
           tower. Ground.jsx fades out at roughly 30 units, and a frustum
           smaller than that ends in a hard straight line across the ground
-          where shadowing simply stops - which read as a rectangular plinth
+          where shadowing simply stops - which reads as a rectangular plinth
           under the building.
+
+          It is symmetric at 42 now, not 32 x -8. The old bottom edge sat 8
+          units behind the tower, well inside the ground, and on a white page
+          that line was plainly visible; on the dark one it was not. Texel
+          density drops from 32/unit to 24/unit, which the shadow is soft
+          enough to absorb.
         */}
-        <orthographicCamera attach="shadow-camera" args={[-32, 32, 32, -8, 1, 90]} />
+        <orthographicCamera attach="shadow-camera" args={[-42, 42, 42, -42, 1, 100]} />
       </directionalLight>
-      {/* cool rim from behind to separate the silhouette from the background */}
-      <directionalLight position={[10, 6, -9]} intensity={0.9} color={FILL} />
+      {/*
+        Rim from behind. On the dark version this drew a bright edge against
+        the background; on white it does the opposite job, keeping the back of
+        the building from going flat where the page is brightest.
+      */}
+      <directionalLight position={[10, 6, -9]} intensity={1.2} color={FILL} />
     </>
   )
 }
@@ -163,31 +185,22 @@ export default function Scene({ progress, reducedMotion, quality = 'high' }) {
       onPointerMove={onPointerMove}
       onCreated={({ gl, scene, camera }) => {
         gl.toneMapping = THREE.ACESFilmicToneMapping
-        gl.toneMappingExposure = 1.05
+        gl.toneMappingExposure = 1.18
         // Handle for scripts/shoot.mjs to inspect framing. Harmless in prod.
         window.__stage = { scene, camera, THREE }
       }}
     >
-      <fog attach="fog" args={[GROUND, 22, 60]} />
+      {/*
+        The fog colour is the page colour. That is what makes the ground
+        dissolve into the document instead of ending somewhere - there is no
+        horizon line and no visible edge to the render.
+      */}
+      <fog attach="fog" args={[GROUND, 20, 58]} />
 
       <Suspense fallback={null}>
         <Tower spin={reducedMotion ? 0 : 0.015} />
         <Ground />
         <Studio />
-
-        {/*
-          Re-rendered every frame, because the building turns underneath it.
-          Kept inside Suspense so it never renders against an empty scene.
-        */}
-        <ContactShadows
-          position={[0, 0.01, 0]}
-          opacity={0.62}
-          scale={34}
-          blur={2.4}
-          far={12}
-          resolution={quality === 'high' ? 1024 : 512}
-          color="#000000"
-        />
       </Suspense>
 
       <Lights />
@@ -200,17 +213,24 @@ export default function Scene({ progress, reducedMotion, quality = 'high' }) {
         "glBlitFramebuffer: Read and write depth stencil attachments cannot be
         the same image" on every frame - bisected to SMAA specifically
         (composer on + SMAA off is clean, every other effect off still errors).
+
+        No vignette any more. It darkened the corners to hold the eye inside a
+        dark frame; against a white page the same pass draws four grey smudges
+        around the edge of an otherwise clean document.
+
+        Bloom is pulled back hard for the same reason. At the old threshold
+        nearly every lit surface was over the line once the scene was
+        brightened, and the whole tower hazed.
       */}
       {quality === 'high' && (
         <EffectComposer multisampling={4} disableNormalPass>
           <Bloom
-            intensity={0.55}
-            luminanceThreshold={0.72}
-            luminanceSmoothing={0.3}
+            intensity={0.32}
+            luminanceThreshold={0.92}
+            luminanceSmoothing={0.25}
             mipmapBlur
           />
-          <Vignette offset={0.28} darkness={0.72} eskil={false} />
-          <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} opacity={0.35} />
+          <Noise premultiply blendFunction={BlendFunction.SOFT_LIGHT} opacity={0.12} />
         </EffectComposer>
       )}
     </Canvas>

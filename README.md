@@ -11,6 +11,11 @@ scroll, so each section reads as a new composed shot of the same building
 rather than a scene swap. Copy is English-primary with Amharic as a display
 accent.
 
+Page order: four scroll-bound chapters (arrival, the offer, the listings
+strip, contact), then homes-and-shops, then **delivered** - the buildings that
+are already finished and handed over - then the assurances strip, the
+commercial inventory and the footer.
+
 ## Development
 
 ```bash
@@ -64,6 +69,27 @@ support for that extension - without conversion the model loads untextured.
 The source also sits far off-origin (bbox x 30..73, z -56..-6), so `geo`
 recentres it onto x/z = 0 with its base on y = 0.
 
+### The site plate, and why two passes remove it
+
+The model is exported standing on its site: a thick ceramic slab with paving
+laid over it, ending in a hard straight edge. Lit from the side it reads as a
+diorama on a plinth - the building looks like a scale model on a table rather
+than a building on ground. `Ground.jsx` substitutes a plane that fades out
+instead, and `Tower.jsx` removes the original in two passes:
+
+- `hideBasePlates()` hides whole meshes that are thin, low and cover most of
+  the footprint. That catches the slab.
+- `cullGroundPaving()` drops individual triangles in the bottom 2% of the
+  model that either face up or are sliver-thin. That catches the paving.
+
+The second pass exists because `join` in the `geo` phase groups meshes by
+material, and the paving shares materials with elements ten storeys up - so by
+the time three.js sees it, the paving is a few hundred triangles inside a mesh
+8.5 units tall, and no mesh-level test can find it. Both passes are reversible
+and undo themselves on unmount; the cull clones geometry before editing it,
+because `useGLTF` caches the loaded scene and `scene.clone(true)` shares
+geometry with the cache.
+
 ## Richer materials without heavier downloads
 
 The source ships base-colour maps only - no roughness, no normals - so every
@@ -105,6 +131,38 @@ up the line height, and reduces the heading size, because Ethiopic syllabics
 are wider and taller than Latin caps. The accent line inverts to the Latin
 grotesk at the same time.
 
+## Palette
+
+The page is white, and that is a constraint on the render as much as on the
+CSS. Two things to know before changing either half.
+
+**Two ambers, not interchangeable.** The brand orange (`#f2a93b`) sets at
+1.9:1 on white, so it survives only as a *fill* - `--amber-solid`, always with
+`--on-amber` on top of it (the call bar, the phone plate's ring). Anything
+read as text or drawn as a hairline uses `--amber` (`#a8640a`), the same hue
+burnt down to 4.7:1. `--amber-soft` is deeper again and belongs to the
+other-language accent line, so it reads as a warm ink rather than as a second
+highlight.
+
+**The render is lit for the page, not the other way round.** It was a dusk
+shot - hot amber key, near-black ground, the building emerging out of the
+dark. On white that inverts: a dark render reads as a hole cut in the page.
+`Scene.jsx` is late-morning now, and three of its changes are load-bearing:
+
+- The fog colour *is* the page colour, which is what dissolves the ground into
+  the document. There is no horizon and no visible edge to the render.
+- Contrast comes from shading, not from the background. The key stays firmly
+  on one side so the building keeps a visibly darker face; lifting the ambient
+  far enough to fill that in washes the tower out into the white behind it.
+- The vignette is gone and bloom is pulled right back. A vignette on a white
+  page draws four grey smudges around an otherwise clean document, and at the
+  old bloom threshold nearly every surface was over the line once the scene
+  was brightened.
+
+`Ground.jsx` is a few percent off page white rather than white itself. Match
+it exactly and the tower stands on nothing, with its contact shadow floating
+unattached.
+
 ## Rendering notes
 
 - Camera keyframes live with the copy, in `src/content.js`, in normalised units
@@ -124,25 +182,30 @@ grotesk at the same time.
 
 ### Performance
 
-The building turns slowly on its own axis. Because the geometry moves, neither
-the directional light's shadow map nor the contact-shadow pass can be baked -
-both re-render every frame. That is the single largest cost in the frame and
-it is a deliberate trade for the motion.
+The building turns slowly on its own axis. Because the geometry moves, the
+directional light's shadow map cannot be baked and re-renders every frame.
+That is the largest cost in the frame and it is a deliberate trade for the
+motion.
 
 If you ever need the cheap version back, it is a one-line change: `spin={0}`
 on `<Tower>` makes the scene fully static, which then allows
-`gl.shadowMap.autoUpdate = false` plus `frames={1}` on `<ContactShadows>`.
-Measured at roughly 2.3x the frame rate under software rendering.
-`prefers-reduced-motion` already takes this path.
+`gl.shadowMap.autoUpdate = false`. `prefers-reduced-motion` already takes this
+path.
 
-The shadow-camera frustum covers 64 units, far wider than the building. This
+There is no `<ContactShadows>` pass any more. It was a second per-frame render
+and, on a white page, its plane was visible: a 34-unit square of very faint
+grey with four hard edges, sitting on ground that otherwise fades out with no
+edge at all. The directional light's own shadow does the grounding now.
+
+The shadow-camera frustum covers 84 units, far wider than the building. This
 is not slack: a frustum smaller than the *visible ground* ends in a hard
 straight line where shadowing simply stops, and that line reads as a
-rectangular plinth under the tower. The map is 2048² rather than 4096²
-precisely because it is re-rendered per frame.
-
-`<ContactShadows>` sits *inside* `<Suspense>` so it never renders against a
-scene whose GLB has not resolved yet.
+rectangular plinth under the tower. It is symmetric now - the old
+`32 x -8` bottom edge sat well inside the ground and was plainly visible once
+the page went white. The map is 2048² rather than 4096² precisely because it
+is re-rendered per frame, and `shadow-normalBias` is 0.07 rather than 0.02
+because acne that was invisible against near-black is a field of grey speckle
+against white.
 
 Do not add an `<SMAA/>` pass to the composer. It floods the console with
 `glBlitFramebuffer: Read and write depth stencil attachments cannot be the
@@ -169,7 +232,7 @@ close enough that the tower fills the frame and runs past the edges - that is
 what makes the shots feel cinematic rather than like a product photographed on
 a table. An earlier pass "fixed" every reported crop by pulling the camera
 back 22-73%, and the result looked markedly worse: a small object centred in a
-lot of empty dark.
+lot of empty page.
 
 Use the tool to catch framing that is *accidentally* wrong - a shot that has
 drifted so far the subject is unreadable, or the portrait overflow of 2x that

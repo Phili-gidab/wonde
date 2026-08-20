@@ -1,20 +1,27 @@
 /**
- * Prepares Wonde's social posts for the feed in chapter 3.
+ * Prepares Wonde's social posts for the page.
  *   public/photo_*.jpg  ->  public/posts/post-NN.webp
  *
  * Run with: npm run media
  *
+ * post-01..04 are finished buildings and are rendered by Delivered.jsx, at
+ * full size and in full colour. post-05..09 are the running offers and are
+ * rendered by Feed.jsx, in the listings strip.
+ *
  * Two deliberate choices here:
  *
- * 1. NO colour grading is baked in. The feed renders these in an amber duotone
- *    to sit inside the site's palette, but reveals their true colours on
- *    hover/tap - so the grade has to stay in CSS. Baking it would make the
- *    reveal impossible without shipping every image twice.
+ * 1. NO colour grading is baked in. The listings strip renders its posters in
+ *    a light duotone so nine of them read as one set, and returns them to
+ *    their real colours on hover/tap - so the grade has to stay in CSS.
+ *    Baking it would make the reveal impossible without shipping every image
+ *    twice, and the delivered photographs are never graded at all.
  *
- * 2. The green Temer badges are KEPT. They are authentic post furniture, and
- *    they are the most satisfying part of the hover reveal. Only genuine phone
- *    screenshot chrome is cropped - the overflow menu, close button and Google
- *    Lens button that got captured with three of the photos.
+ * 2. The green Temer badges are KEPT. They are authentic post furniture; on
+ *    the delivered photographs they also carry the name, location and
+ *    built-up area, which is why those cards are never cropped to a uniform
+ *    box. Only genuine phone screenshot chrome is cropped - the overflow
+ *    menu, close button and Google Lens button that got captured with three
+ *    of the photos.
  */
 import sharp from 'sharp'
 import { mkdir, writeFile } from 'node:fs/promises'

@@ -4,20 +4,51 @@
   Layout model: one fixed, full-viewport WebGL canvas (`.stage`) sits behind a
   scrolling DOM overlay (`.overlay`). Scroll position drives the camera, so the
   building re-frames itself as chapters pass rather than the page swapping
-  scenes. All text sits in a left column over a scrim so it stays legible
-  against whatever the render happens to be doing behind it.
+  scenes. All text sits in a left column over a white scrim so it stays
+  legible against whatever the render happens to be doing behind it.
+
+  The page is white. Every colour is a token below, and the render behind it
+  is lit to match - see src/three/Scene.jsx. Two rules keep the two halves
+  consistent: text-weight amber is `--amber` (dark enough to read on white,
+  4.7:1), and brand-fill amber is `--amber-solid` (the poster orange, only
+  ever used as a background with `--on-amber` on top).
 */
 
 :root {
-  --bg: #07090d;
-  --bg-soft: #0b0f16;
-  --ink: #f2f4f7;
-  --ink-dim: #9aa6b6;
-  --ink-faint: #5d6878;
-  --amber: #f2a93b;
-  --amber-soft: #ffc27a;
-  --blue: #6ea8dd;
-  --line: rgba(154, 166, 182, 0.18);
+  --bg: #ffffff;
+  --bg-soft: #f4f5f7;
+  --bg-tint: #faf9f7;
+  --ink: #12161d;
+  --ink-dim: #4f5a68;
+  --ink-faint: #6b7683;
+
+  /*
+    Two ambers, and they are not interchangeable. The poster orange is far too
+    light to set type in on white - 1.9:1 - so it survives only as a fill
+    (`--amber-solid`, always with `--on-amber` on top). Anything that is read
+    as text or drawn as a hairline uses `--amber`, which is the same hue burnt
+    down to 4.7:1. `--amber-soft` is the other-language accent line: deeper
+    still, so it reads as a warm ink rather than as a second highlight.
+  */
+  --amber: #a8640a;
+  --amber-soft: #8f5510;
+  --amber-solid: #f2a93b;
+  --on-amber: #231404;
+
+  --blue: #2f6ea8;
+  --line: rgba(18, 22, 29, 0.14);
+  --line-soft: rgba(18, 22, 29, 0.07);
+  --amber-line: rgba(168, 100, 10, 0.3);
+  --amber-wash: rgba(242, 169, 59, 0.12);
+
+  /*
+    Frosted panels. Sections below the fold sit over the same fixed canvas the
+    chapters do, so they are translucent white rather than opaque - the
+    building stays faintly present behind the page instead of being cut off at
+    a hard edge.
+  */
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-soft: rgba(255, 255, 255, 0.7);
 
   --sans: 'Archivo', system-ui, -apple-system, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -76,8 +107,10 @@ a {
 }
 
 /*
-  Colour grade + legibility scrim. The left wash is what lets white text sit
-  over a bright render without a solid panel behind it.
+  Legibility scrim. The left wash is what lets dark text sit over the render
+  without a solid panel behind it: opaque white where the heading is, gone by
+  the time it reaches the building. The bottom wash sinks the ground plane
+  into the page so the render has no visible lower edge.
 */
 .stage-grade {
   position: absolute;
@@ -86,13 +119,13 @@ a {
   background:
     linear-gradient(
       100deg,
-      rgba(7, 9, 13, 0.94) 0%,
-      rgba(7, 9, 13, 0.78) 26%,
-      rgba(7, 9, 13, 0.28) 52%,
-      rgba(7, 9, 13, 0) 72%
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.86) 26%,
+      rgba(255, 255, 255, 0.34) 52%,
+      rgba(255, 255, 255, 0) 72%
     ),
-    radial-gradient(ellipse 120% 80% at 50% 120%, rgba(7, 9, 13, 0.85), transparent 60%),
-    radial-gradient(ellipse 90% 60% at 70% -10%, rgba(110, 168, 221, 0.1), transparent 70%);
+    radial-gradient(ellipse 120% 80% at 50% 120%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 70% -10%, rgba(146, 184, 222, 0.14), transparent 70%);
 }
 
 /* ── overlay: the scrolling document ───────────────────────────── */
@@ -156,17 +189,17 @@ a {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--amber);
-  border: 1px solid rgba(242, 169, 59, 0.34);
+  border: 1px solid var(--amber-line);
   border-radius: 999px;
   padding: 0.5rem 1rem;
-  background: rgba(242, 169, 59, 0.06);
+  background: rgba(242, 169, 59, 0.1);
   backdrop-filter: blur(6px);
   transition: background 0.3s, border-color 0.3s;
 }
 
 .nav-call:hover {
-  background: rgba(242, 169, 59, 0.14);
-  border-color: rgba(242, 169, 59, 0.6);
+  background: rgba(242, 169, 59, 0.22);
+  border-color: rgba(168, 100, 10, 0.55);
 }
 
 .nav-call-dot {
@@ -174,13 +207,13 @@ a {
   height: 6px;
   border-radius: 50%;
   background: var(--amber);
-  box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.6);
+  box-shadow: 0 0 0 0 rgba(168, 100, 10, 0.6);
   animation: ping 2.4s ease-out infinite;
 }
 
 @keyframes ping {
-  0% { box-shadow: 0 0 0 0 rgba(242, 169, 59, 0.5); }
-  70%, 100% { box-shadow: 0 0 0 8px rgba(242, 169, 59, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(168, 100, 10, 0.45); }
+  70%, 100% { box-shadow: 0 0 0 8px rgba(168, 100, 10, 0); }
 }
 
 /* chapter rail, right edge */
@@ -413,12 +446,11 @@ a {
 
   Every block a chapter can render must be listed here. Anything left out
   never fades, so it stays lit while a later chapter is on screen and the two
-  chapters visibly overlap - which is exactly what happened when the sites and
-  delivered lists were added without being added here.
+  chapters visibly overlap - which is exactly what happened when the site list
+  was added without being added here.
 */
 .ch-stats,
 .ch-sites,
-.ch-delivered,
 .ch-contact {
   opacity: 0;
   transform: translateY(16px);
@@ -427,7 +459,6 @@ a {
 
 .ch.is-active .ch-stats,
 .ch.is-active .ch-sites,
-.ch.is-active .ch-delivered,
 .ch.is-active .ch-contact {
   opacity: 1;
   transform: translateY(0);
@@ -472,55 +503,6 @@ a {
   color: var(--ink-faint);
 }
 
-/* unit table */
-.ch-specs {
-  margin-top: clamp(1.8rem, 4vh, 2.6rem);
-  border-top: 1px solid var(--line);
-}
-
-.ch-spec {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.5rem;
-  max-width: 26rem;
-  padding: 0.85rem 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.ch-spec dt {
-  font-weight: 600;
-  font-size: 1.02rem;
-}
-
-.ch-spec dd {
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--ink-dim);
-}
-
-/* location marks */
-.ch-marks {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: clamp(1.8rem, 4vh, 2.6rem);
-}
-
-.ch-marks li {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.4rem 0.9rem;
-  background: rgba(11, 15, 22, 0.5);
-  backdrop-filter: blur(4px);
-}
-
 /* ── contact block ─────────────────────────────────────────────── */
 
 .ch-contact {
@@ -532,16 +514,16 @@ a {
   align-items: center;
   gap: 1rem;
   padding: 0.9rem 1.6rem 0.9rem 0.9rem;
-  border: 1px solid rgba(242, 169, 59, 0.32);
+  border: 1px solid var(--amber-line);
   border-radius: 4px;
-  background: rgba(242, 169, 59, 0.07);
+  background: rgba(242, 169, 59, 0.12);
   backdrop-filter: blur(8px);
   transition: background 0.3s, border-color 0.3s, transform 0.3s;
 }
 
 .phone-plate:hover {
-  background: rgba(242, 169, 59, 0.14);
-  border-color: rgba(242, 169, 59, 0.62);
+  background: rgba(242, 169, 59, 0.24);
+  border-color: rgba(168, 100, 10, 0.6);
   transform: translateY(-2px);
 }
 
@@ -551,8 +533,8 @@ a {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: var(--amber);
-  color: #10131a;
+  background: var(--amber-solid);
+  color: var(--on-amber);
   flex-shrink: 0;
 }
 
@@ -618,14 +600,14 @@ a {
   border: 1px solid var(--line);
   border-radius: 3px;
   color: var(--ink);
-  background: rgba(11, 15, 22, 0.55);
+  background: var(--panel-soft);
   backdrop-filter: blur(6px);
   transition: border-color 0.3s, background 0.3s;
 }
 
 .btn:hover {
-  border-color: rgba(242, 169, 59, 0.5);
-  background: rgba(242, 169, 59, 0.1);
+  border-color: var(--amber-line);
+  background: var(--amber-wash);
 }
 
 /* ── assurances strip ──────────────────────────────────────────── */
@@ -633,7 +615,7 @@ a {
 .assurances {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: rgba(7, 9, 13, 0.72);
+  background: var(--panel);
   backdrop-filter: blur(10px);
   padding: clamp(1.6rem, 4vh, 2.4rem) var(--gutter);
 }
@@ -679,7 +661,7 @@ a {
 
 .commercial {
   padding: clamp(5rem, 14vh, 9rem) var(--gutter);
-  background: rgba(7, 9, 13, 0.82);
+  background: var(--panel);
   backdrop-filter: blur(10px);
 }
 
@@ -738,7 +720,8 @@ a {
 .project {
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: rgba(11, 15, 22, 0.6);
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.04), 0 12px 30px -18px rgba(18, 22, 29, 0.25);
   padding: clamp(1.4rem, 3vw, 2.2rem);
 }
 
@@ -835,12 +818,12 @@ a {
 
 .unit-table td {
   padding: 0.65rem 0.9rem 0.65rem 0;
-  border-bottom: 1px solid rgba(154, 166, 182, 0.09);
+  border-bottom: 1px solid var(--line-soft);
   white-space: nowrap;
 }
 
 .unit-table tbody tr:hover {
-  background: rgba(242, 169, 59, 0.05);
+  background: rgba(242, 169, 59, 0.1);
 }
 
 .unit-table .num {
@@ -867,9 +850,9 @@ a {
   gap: 0.7rem;
   margin-top: clamp(2rem, 5vh, 3rem);
   padding: 0.85rem 1.5rem;
-  border: 1px solid rgba(242, 169, 59, 0.34);
+  border: 1px solid var(--amber-line);
   border-radius: 3px;
-  background: rgba(242, 169, 59, 0.07);
+  background: rgba(242, 169, 59, 0.12);
   color: var(--amber);
   font-family: var(--mono);
   font-size: 0.78rem;
@@ -879,8 +862,8 @@ a {
 }
 
 .commercial-call:hover {
-  background: rgba(242, 169, 59, 0.14);
-  border-color: rgba(242, 169, 59, 0.6);
+  background: rgba(242, 169, 59, 0.24);
+  border-color: rgba(168, 100, 10, 0.55);
 }
 
 .commercial-call-num {
@@ -888,26 +871,21 @@ a {
   letter-spacing: 0.04em;
 }
 
-/* ── chapter: sites + delivered lists ──────────────────────────── */
+/* ── chapter: site lists ───────────────────────────────────────── */
 
-.ch-sites,
-.ch-delivered {
+.ch-sites {
   list-style: none;
   margin-top: clamp(1.8rem, 4vh, 2.6rem);
   border-top: 1px solid var(--line);
 }
 
-.ch-sites li,
-.ch-delivered li {
+.ch-sites li {
   display: grid;
+  grid-template-columns: 1fr auto;
   gap: 0.15rem 1.2rem;
   padding: 0.95rem 0;
   border-bottom: 1px solid var(--line);
   max-width: 34rem;
-}
-
-.ch-sites li {
-  grid-template-columns: 1fr auto;
 }
 
 .site-name {
@@ -937,39 +915,6 @@ a {
   font-size: 0.72rem;
   color: var(--amber);
   text-align: right;
-}
-
-.ch-delivered li {
-  grid-template-columns: 1fr auto;
-}
-
-.delivered-name {
-  font-weight: 600;
-}
-
-.delivered-place {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-.delivered-detail {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  align-self: center;
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  color: var(--ink-dim);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.sep {
-  color: var(--ink-faint);
-  margin-right: 0.6rem;
-  opacity: 0.6;
 }
 
 /* ── footer ────────────────────────────────────────────────────── */
@@ -1060,8 +1005,9 @@ a {
   justify-content: center;
   gap: 0.6rem;
   padding: 0.95rem 1rem;
-  background: var(--amber);
-  color: #10131a;
+  background: var(--amber-solid);
+  color: var(--on-amber);
+  box-shadow: 0 -8px 24px -12px rgba(18, 22, 29, 0.4);
   font-weight: 600;
   font-size: 0.95rem;
 }
@@ -1126,6 +1072,8 @@ a {
   background: var(--amber);
   transform-origin: left;
   transition: transform 0.35s ease;
+  /* 1px of deep amber on white needs the extra weight to register. */
+  box-shadow: 0 0 0 0.5px var(--amber);
 }
 
 .loader-pct {
@@ -1157,10 +1105,10 @@ a {
     background:
       linear-gradient(
         180deg,
-        rgba(7, 9, 13, 0.9) 0%,
-        rgba(7, 9, 13, 0.55) 34%,
-        rgba(7, 9, 13, 0.55) 62%,
-        rgba(7, 9, 13, 0.95) 100%
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(255, 255, 255, 0.74) 34%,
+        rgba(255, 255, 255, 0.74) 62%,
+        rgba(255, 255, 255, 0.96) 100%
       );
   }
 
@@ -1197,7 +1145,6 @@ a {
   .ch-body,
   .ch-stats,
   .ch-sites,
-  .ch-delivered,
   .ch-contact {
     transform: none;
     opacity: 1;
@@ -1226,7 +1173,7 @@ a {
   padding: 0.4rem 0.8rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(11, 15, 22, 0.55);
+  background: var(--panel-soft);
   backdrop-filter: blur(6px);
 }
 
@@ -1275,7 +1222,10 @@ a {
 */
 :root[data-lang='am'] .ch-heading,
 :root[data-lang='am'] .commercial h2,
+:root[data-lang='am'] .delivered h2,
+:root[data-lang='am'] .pillars-head h2,
 :root[data-lang='am'] .project-head h3,
+:root[data-lang='am'] .pillar-kind,
 :root[data-lang='am'] .footer-brand {
   font-family: var(--eth-display);
   letter-spacing: 0;
@@ -1289,9 +1239,13 @@ a {
 
 :root[data-lang='am'] .ch-body,
 :root[data-lang='am'] .commercial-body,
+:root[data-lang='am'] .delivered-body,
+:root[data-lang='am'] .built-note,
+:root[data-lang='am'] .delivered-stats dd,
 :root[data-lang='am'] .project-summary,
 :root[data-lang='am'] .assurance-en,
 :root[data-lang='am'] .site-note,
+:root[data-lang='am'] .built-place,
 :root[data-lang='am'] .ch-stat-label {
   font-family: var(--eth);
   line-height: 1.75;
@@ -1299,6 +1253,8 @@ a {
 
 :root[data-lang='am'] .ch-am,
 :root[data-lang='am'] .commercial-am,
+:root[data-lang='am'] .delivered-am,
+:root[data-lang='am'] .built-place-am,
 :root[data-lang='am'] .project-am,
 :root[data-lang='am'] .footer-brand-am,
 :root[data-lang='am'] .assurance-am,
@@ -1491,15 +1447,15 @@ a {
   place-items: center;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: rgba(11, 15, 22, 0.6);
+  background: var(--panel-soft);
   color: var(--ink);
   cursor: pointer;
   transition: border-color 0.3s, background 0.3s, opacity 0.3s;
 }
 
 .feed-nav button:hover:not(:disabled) {
-  border-color: rgba(242, 169, 59, 0.6);
-  background: rgba(242, 169, 59, 0.12);
+  border-color: rgba(168, 100, 10, 0.55);
+  background: var(--amber-wash);
   color: var(--amber);
 }
 
@@ -1545,13 +1501,15 @@ a {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: rgba(11, 15, 22, 0.6);
-  transition: border-color 0.4s ease;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.05), 0 18px 40px -26px rgba(18, 22, 29, 0.4);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .post:hover,
 .post.is-revealed {
-  border-color: rgba(242, 169, 59, 0.5);
+  border-color: var(--amber-line);
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.06), 0 22px 46px -24px rgba(18, 22, 29, 0.45);
 }
 
 .post:focus-visible {
@@ -1568,8 +1526,8 @@ a {
   display: block;
   height: 100%;
   width: auto;
-  filter: grayscale(1) sepia(0.58) hue-rotate(-14deg) saturate(1.9)
-    brightness(0.62) contrast(1.12);
+  filter: grayscale(1) sepia(0.42) hue-rotate(-12deg) saturate(1.35)
+    brightness(1.04) contrast(0.94);
   transition: filter 0.55s ease;
 }
 
@@ -1587,7 +1545,7 @@ a {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink);
-  background: rgba(7, 9, 13, 0.76);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(6px);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -1603,7 +1561,7 @@ a {
   flex-direction: column;
   gap: 0.05rem;
   padding: 2.6rem 0.8rem 0.75rem;
-  background: linear-gradient(180deg, transparent, rgba(7, 9, 13, 0.94) 58%);
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.96) 52%);
 }
 
 .post-title {
@@ -1628,7 +1586,7 @@ a {
 
 .pillars {
   padding: clamp(4rem, 10vh, 7rem) var(--gutter);
-  background: rgba(7, 9, 13, 0.86);
+  background: var(--panel);
   backdrop-filter: blur(10px);
   border-top: 1px solid var(--line);
 }
@@ -1738,7 +1696,7 @@ a {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
-  border-bottom: 1px solid rgba(242, 169, 59, 0.5);
+  border-bottom: 1px solid var(--amber-line);
   padding-bottom: 0.25rem;
   transition: color 0.3s;
 }
@@ -1860,8 +1818,8 @@ a {
   font-size: 0.62rem;
   letter-spacing: 0.1em;
   color: var(--ink);
-  opacity: 0.75;
-  text-shadow: 0 1px 6px rgba(7, 9, 13, 0.9);
+  opacity: 0.85;
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.95), 0 0 3px rgba(255, 255, 255, 0.9);
 }
 
 .post-more {
@@ -1897,13 +1855,20 @@ a {
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: var(--bg-soft);
+  background: var(--bg);
   color: var(--ink);
+  box-shadow: 0 40px 80px -30px rgba(18, 22, 29, 0.45);
   overflow: hidden;
 }
 
+/*
+  Still a dark backdrop, on a white page. The dialog is white and so is
+  everything behind it; a light backdrop leaves the poster floating with no
+  edge, and the whole point of the lightbox is that the poster becomes the
+  only thing on screen.
+*/
 .lightbox::backdrop {
-  background: rgba(4, 6, 9, 0.86);
+  background: rgba(14, 18, 24, 0.62);
   backdrop-filter: blur(6px);
 }
 
@@ -1915,7 +1880,7 @@ a {
 
 .lb-img {
   position: relative;
-  background: #05070a;
+  background: var(--bg-soft);
   display: grid;
   place-items: center;
   min-height: 0;
@@ -1942,7 +1907,7 @@ a {
   place-items: center;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: rgba(7, 9, 13, 0.8);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--ink);
   font-size: 0.85rem;
   cursor: pointer;
@@ -1950,8 +1915,8 @@ a {
 }
 
 .lb-close:hover {
-  border-color: rgba(242, 169, 59, 0.6);
-  background: rgba(242, 169, 59, 0.14);
+  border-color: rgba(168, 100, 10, 0.55);
+  background: rgba(242, 169, 59, 0.24);
   color: var(--amber);
 }
 
@@ -2043,15 +2008,15 @@ a {
   place-items: center;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: rgba(11, 15, 22, 0.6);
+  background: #ffffff;
   color: var(--ink);
   cursor: pointer;
   transition: border-color 0.3s, background 0.3s, color 0.3s;
 }
 
 .lb-nav button:hover {
-  border-color: rgba(242, 169, 59, 0.6);
-  background: rgba(242, 169, 59, 0.12);
+  border-color: rgba(168, 100, 10, 0.55);
+  background: var(--amber-wash);
   color: var(--amber);
 }
 
@@ -2238,9 +2203,227 @@ a {
 
 /*
   The listings strip is full-bleed, so cards pass underneath the chapter rail -
-  and on hover they return to full colour. A shadow keeps the rail readable
+  and on hover they return to full colour. A white halo keeps the rail readable
   over whatever happens to be behind it.
 */
 .rail a {
-  text-shadow: 0 1px 10px rgba(7, 9, 13, 0.95), 0 0 3px rgba(7, 9, 13, 0.9);
+  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.95), 0 0 3px rgba(255, 255, 255, 0.95);
+}
+
+/* ── delivered: the buildings that already exist ───────────────── */
+
+/*
+  The proof section. Everything above it is a promise - a price, a payment
+  split, a poster for a site still going up - and this is the part a buyer can
+  check by driving past, so it gets the photographs at full size and in full
+  colour. The listings strip grades its posters down to sit inside the page;
+  this one deliberately does not.
+
+  It is the one band on the page that is opaque rather than frosted. Coming
+  straight after the pillars, a second translucent panel read as more of the
+  same block; a solid off-white makes it land as its own chapter of the page
+  and gives the photographs a ground that is not the same white as the page.
+*/
+.delivered {
+  padding: clamp(4.5rem, 12vh, 8rem) var(--gutter);
+  background: var(--bg-tint);
+  border-top: 1px solid var(--line);
+}
+
+.delivered-head {
+  max-width: 52rem;
+  margin-bottom: clamp(2.4rem, 6vh, 3.6rem);
+}
+
+.delivered h2 {
+  font-size: clamp(1.8rem, 4.4vw, 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  /* The heading carries its own line break, from src/content.js. */
+  white-space: pre-line;
+}
+
+.delivered-am {
+  font-family: var(--eth-display);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--amber-soft);
+  margin-top: 0.8rem;
+}
+
+.delivered-body {
+  margin-top: 1rem;
+  color: var(--ink-dim);
+  max-width: 52ch;
+}
+
+.delivered-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.4rem, 4vw, 3.2rem);
+  margin-top: clamp(1.6rem, 3.5vh, 2.4rem);
+  padding-top: clamp(1.2rem, 2.5vh, 1.8rem);
+  border-top: 1px solid var(--line);
+}
+
+.delivered-stats dt {
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--amber);
+}
+
+.delivered-stats dd {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 0.45rem;
+}
+
+/*
+  Two columns, start-aligned, and every image keeps its own aspect ratio. The
+  four photographs are 1000x520, 1000x497, 1000x497 and 1000x837, and each has
+  a green Temer badge burned into its lower left carrying the name, location
+  and built-up area. Cropping them to a uniform box cuts those badges in half,
+  which reads as a mistake rather than as a design - so the cards are allowed
+  to be different heights instead.
+
+  Capped rather than full-bleed: the sources are 1000px wide, and past about
+  600px on screen they visibly soften.
+*/
+.delivered-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.8rem, 4vw, 3rem);
+  align-items: start;
+  max-width: 76rem;
+}
+
+@media (min-width: 860px) {
+  .delivered-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.built {
+  margin: 0;
+}
+
+.built-media {
+  position: relative;
+  display: block;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--bg-soft);
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.06), 0 20px 44px -28px rgba(18, 22, 29, 0.5);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.built:hover .built-media {
+  transform: translateY(-3px);
+  box-shadow: 0 1px 2px rgba(18, 22, 29, 0.07), 0 28px 56px -26px rgba(18, 22, 29, 0.55);
+}
+
+.built-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.built-kind {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.26rem 0.62rem;
+}
+
+.built-meta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.15rem 1.2rem;
+  padding-top: 1.05rem;
+}
+
+.built-name {
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.built-place {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.built-place-am {
+  font-family: var(--eth);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--amber-soft);
+}
+
+/* Floors and area ride the right edge, across both caption rows. */
+.built-spec {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.built-area {
+  font-size: 0.74rem;
+  color: var(--amber);
+}
+
+.built-note {
+  grid-column: 1 / -1;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.92rem;
+  color: var(--ink-dim);
+}
+
+@media (max-width: 560px) {
+  /* The Amharic place name doubles the line on a 390px screen, and the
+     English one directly above it already says where the building is. */
+  .built-place-am {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .built-media,
+  .built:hover .built-media {
+    transform: none;
+    transition: none;
+  }
 }

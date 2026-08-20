@@ -13,6 +13,11 @@ import * as THREE from 'three'
  * The trick is the alpha map: a radial falloff so the plane dissolves into the
  * background instead of terminating at an edge. There is no horizon line to
  * give the scale away.
+ *
+ * The colour is a shade off the page white rather than white itself. Matching
+ * the page exactly leaves the tower standing on nothing and the contact shadow
+ * floating unattached; a few percent of grey is enough to read as ground and
+ * still disappear into the document at the rim.
  */
 
 /** White at centre, transparent at the rim, with an eased falloff. */
@@ -46,7 +51,7 @@ function radialFadeTexture(size = 512) {
   return texture
 }
 
-export default function Ground({ radius = 60, color = '#080b11' }) {
+export default function Ground({ radius = 60, color = '#e9edf2' }) {
   const alphaMap = useMemo(() => radialFadeTexture(512), [])
 
   useEffect(() => () => alphaMap.dispose(), [alphaMap])
@@ -63,17 +68,18 @@ export default function Ground({ radius = 60, color = '#080b11' }) {
       <circleGeometry args={[radius, 96]} />
       {/*
         Low metalness and high roughness on purpose. A polished ground picks up
-        the warm key light across its whole span and reads as sand rather than
-        as city ground - the building should be the only bright thing in frame.
+        the warm key light across its whole span and blows out to white, which
+        takes the contact shadow with it - and the shadow is what puts the
+        building on the ground.
       */}
       <meshStandardMaterial
         color={color}
-        roughness={0.72}
-        metalness={0.15}
+        roughness={0.86}
+        metalness={0.05}
         alphaMap={alphaMap}
         transparent
         depthWrite={false}
-        envMapIntensity={0.3}
+        envMapIntensity={0.45}
         side={THREE.FrontSide}
       />
     </mesh>
