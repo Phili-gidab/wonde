@@ -122,8 +122,8 @@ export const CHAPTERS = [
       am: 'አሁን በሽያጭ\nላይ ያለው።',
     },
     body: {
-      en: 'The offers running right now at Sarbet and Megenagna.',
-      am: 'አሁን በሳር ቤት እና በመገናኛ ያሉ ቅናሾች።',
+      en: 'The offers running right now.',
+      am: 'አሁን ያሉ ቅናሾች።',
     },
     feed: true,
     camera: {
@@ -186,11 +186,10 @@ export const WHY = {
   heading: { en: 'Why choose Temer.', am: 'ለምን ቴምርን ይምረጡ።' },
   body: {
     en:
-      'Eleven projects completed and handed over in ten years, and two sites ' +
+      'Eleven projects completed and handed over in ten years, and four sites ' +
       'selling now. This is what you are buying into.',
-    am:
-      'ቴምር በ10 ዓመት ውስጥ 11 ፕሮጀክቶች አጠናቆ አስረክቧል። ' +
-      'ሁለት ሳይቶች አሁን በሽያጭ ላይ ናቸው።',
+    am: 'ቴምር በ10 ዓመት ውስጥ 11 ፕሮጀክቶች አጠናቆ አስረክቧል። ' +
+      'አራት ሳይቶች አሁን በሽያጭ ላይ ናቸው።',
   },
   items: [
     {
@@ -199,11 +198,11 @@ export const WHY = {
       title: { en: 'Prime location', am: 'ምርጥ አካባቢ' },
       body: {
         en:
-          'Sarbet Adebabay and Megenagna Diaspora Adebabay - two live sites on ' +
-          'major roundabouts, with retail at Piyassa and Kaliti.',
+          'Four live sites - Sarbet Adebabay, Megenagna Diaspora Adebabay, ' +
+          'Bulgaria and Aware - with retail at Piyassa, Kaliti and Bulgaria.',
         am:
-          'ሳር ቤት አደባባይ እና መገናኛ ዲያስፖራ አደባባይ - በሁለት ዋና አደባባዮች ላይ። ' +
-          'ሱቆችም በፒያሳ እና በቃሊቲ።',
+          'ሳር ቤት አደባባይ፣ መገናኛ ዲያስፖራ አደባባይ፣ ቡልጋሪያ እና አዋሬ - አራት ሳይቶች። ' +
+          'ሱቆችም በፒያሳ፣ በቃሊቲ እና በቡልጋሪያ።',
       },
     },
     {
@@ -212,9 +211,9 @@ export const WHY = {
       title: { en: 'Affordable price', am: 'ተመጣጣኝ ዋጋ' },
       body: {
         en:
-          '4.6 million birr all in, at 130,000 birr per square metre, with ' +
+          '4.6 million birr all in, from 115,000 birr per square metre, with ' +
           'discounts of up to 35%.',
-        am: 'በጠቅላላ 4.6 ሚልዮን ብር፤ 130,000 ብር በካሬ፤ እስከ 35% ቅናሽ።',
+        am: 'በጠቅላላ 4.6 ሚልዮን ብር፤ ከ115,000 ብር በካሬ፤ እስከ 35% ቅናሽ።',
       },
     },
     {
@@ -378,12 +377,17 @@ export const PILLARS = {
       id: 'homes',
       kind: { en: 'Homes', am: 'ቤቶች' },
       lead: {
-        en: 'Studio to three bedroom, at two live sites on major roundabouts.',
-        am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ፤ በሁለት ዋና አደባባዮች ላይ።',
+        en: 'Studio to three bedroom, at four live sites across the city.',
+        am: 'ከስቱዲኦ እስከ ባለ ሶስት መኝታ፤ በአራት ሳይቶች።',
       },
       figures: [
         { k: { en: 'Sizes', am: 'ስፋት' }, v: '32 - 154 m²' },
-        { k: { en: 'Rate', am: 'ዋጋ' }, v: { en: '130,000 birr / m²', am: '130,000 ብር በካሬ' } },
+        // Bulgaria sells at 115,000 and the older sites at 130,000, so this is a
+        // floor and not a flat rate. See POSTS post-10.
+        {
+          k: { en: 'Rate', am: 'ዋጋ' },
+          v: { en: 'from 115,000 birr / m²', am: 'ከ115,000 ብር በካሬ' },
+        },
         { k: { en: 'Discount', am: 'ቅናሽ' }, v: { en: 'up to 35%', am: 'እስከ 35%' } },
       ],
       sites: [
@@ -395,6 +399,19 @@ export const PILLARS = {
         {
           name: { en: 'Megenagna Diaspora Adebabay', am: 'መገናኛ ዲያስፖራ አደባባይ' },
           size: '32 - 154 m²',
+          note: { en: 'Up to 35% off', am: 'እስከ 35% ቅናሽ' },
+        },
+        // No published unit mix for these two yet - the posters carry the rate
+        // and the discount only, so `size` holds what is known rather than an
+        // empty cell. Replace it the moment Wonde sends the sizes.
+        {
+          name: { en: 'Bulgaria', am: 'ቡልጋሪያ' },
+          size: '115,000 / m²',
+          note: { en: 'Homes and shops, 30% off', am: 'መኖሪያ እና ሱቅ፣ እስከ 30% ቅናሽ' },
+        },
+        {
+          name: { en: 'Aware', am: 'አዋሬ' },
+          size: '—',
           note: { en: 'Up to 35% off', am: 'እስከ 35% ቅናሽ' },
         },
       ],
@@ -612,6 +629,57 @@ export const POSTS = [
       {
         en: '4.6 million birr in total: 40% on signing, 60% when you take the keys.',
         am: 'በ4.6 ሚልዮን ብር ጠቅላላ፡ 40% ቅድመ ክፍያ፣ 60% ቤትዎን ሲረከቡ።',
+      },
+    ],
+  },
+  {
+    id: 'post-12', kind: 'offer', w: 1000, h: 1000,
+    title: { en: 'Aware', am: 'አዋሬ' },
+    place: { en: 'Apartments', am: 'አፓርታማዎች' },
+    detail: { en: '10th anniversary offer', am: 'የ10ኛ ዓመት ቅናሽ' },
+    lines: [
+      {
+        en: 'Apartments at Aware, in Temer’s tenth anniversary year.',
+        am: 'አፓርታማዎች በአዋሬ።',
+      },
+      {
+        en: 'Temer is a ShebaMiles partner.',
+        am: 'ቴምር የShebaMiles አጋር ነው።',
+      },
+    ],
+  },
+  {
+    id: 'post-10', kind: 'offer', w: 1000, h: 1000,
+    title: { en: 'Bulgaria', am: 'ቡልጋሪያ' },
+    place: { en: 'Homes and shops', am: 'መኖሪያ እና የንግድ ሱቅ' },
+    detail: { en: '115,000 birr / m² · 30% off', am: 'በካሬ 115,000 ብር · እስከ 30% ቅናሽ' },
+    lines: [
+      {
+        en: 'A new Temer site at Bulgaria - homes and commercial shops in one building.',
+        am: 'በቡልጋሪያ አዲስ የቴምር ሳይት - መኖሪያ እና የንግድ ሱቅ።',
+      },
+      {
+        en: '115,000 birr per square metre, against 130,000 at the older sites.',
+        am: 'በካሬ 115,000 ብር።',
+      },
+    ],
+  },
+  {
+    id: 'post-11', kind: 'offer', w: 1000, h: 1000,
+    title: { en: 'Four sites', am: 'አራት ሳይቶች' },
+    place: {
+      en: 'Aware · Sarbet · Gelan · Bulgaria',
+      am: 'አዋሬ · ሳር ቤት · ገላን · ቡልጋሪያ',
+    },
+    detail: { en: '35% off', am: 'እስከ 35% ቅናሽ' },
+    lines: [
+      {
+        en: 'Four sites to choose from: Aware, Sarbet, Gelan and Bulgaria.',
+        am: 'አራት ሳይቶች፡ አዋሬ፣ ሳር ቤት፣ ገላን እና ቡልጋሪያ።',
+      },
+      {
+        en: '35% off across all four.',
+        am: 'እስከ 35% ቅናሽ።',
       },
     ],
   },

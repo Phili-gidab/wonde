@@ -40,6 +40,13 @@ const SOURCES = [
   { out: 'post-07', src: 'photo_7_2026-08-17_17-43-55.jpg', trim: [0, 0, 0, 0] },
   { out: 'post-08', src: 'photo_8_2026-08-17_17-43-55.jpg', trim: [0, 0, 0, 0] },
   { out: 'post-09', src: 'photo_9_2026-08-17_17-43-55.jpg', trim: [0, 0, 0, 0] },
+
+  // Second batch, August 2026. Three more offer posters, and between them
+  // they put two sites on the page that were not on it before - Bulgaria and
+  // Aware - plus Gelan, which until now appeared only as the Kaliti mall.
+  { out: 'post-10', src: 'photo_2026-08-20_18-31-37.jpg', trim: [0, 0, 0, 0] },
+  { out: 'post-11', src: 'photo_2026-08-20_18-32-53.jpg', trim: [0, 0, 0, 0] },
+  { out: 'post-12', src: 'IMG_20260820_184135_968.png', trim: [0, 0, 0, 0] },
 ]
 
 await mkdir('public/posts', { recursive: true })
