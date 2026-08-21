@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { BRAND } from '../content.js'
 import { useLang } from '../i18n.jsx'
+import Logo from './Logo.jsx'
 
 /**
  * Load curtain.
@@ -29,6 +30,7 @@ export default function Loader({ onReady }) {
   return (
     <div className={`loader${hidden ? ' is-hidden' : ''}`} aria-hidden={hidden}>
       <div className="loader-inner">
+        <Logo size={88} lockup />
         <p className="loader-brand">{BRAND.mark}</p>
         <p className="loader-am">{t(BRAND.name)}</p>
 

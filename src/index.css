@@ -37,6 +37,14 @@
     problem before it is a taste one; the mark itself supplies the bright note,
     and everything drawn in CSS holds the darker end of the same hue.
   */
+  /*
+    The logo's own green, sampled from the source artwork's background by
+    scripts/media/logo.mjs. It is a yellow-green at 78 degrees and only 3:1
+    against white, so it is a TILE colour and never a type colour - the
+    accents below are the same family burnt down until they can be read.
+  */
+  --brand-green: #85a931;
+
   --green: #2e7d32;
   --green-soft: #256428;
   --green-solid: #2e7d32;
@@ -170,8 +178,10 @@ a {
 
 .nav-brand {
   display: flex;
-  align-items: baseline;
-  gap: 0.7rem;
+  /* Was `baseline`, which has nothing to align against once the tile is in -
+     an image box carries no baseline of its own and drops onto the text's. */
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .nav-mark {
@@ -894,6 +904,12 @@ a {
   padding-bottom: 2.5rem;
 }
 
+.footer-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
 .footer-brand {
   font-size: 1.15rem;
   font-weight: 600;
@@ -990,6 +1006,10 @@ a {
   align-items: center;
   gap: 0.5rem;
   width: min(20rem, 70vw);
+}
+
+.loader-inner .logo-tile {
+  margin-bottom: 1.1rem;
 }
 
 .loader-brand {
@@ -1103,6 +1123,31 @@ a {
   .scroll-hint-line::after {
     animation: none;
   }
+}
+
+/* ── logo tile ──────────────────────────────────────── */
+
+/*
+  The mark ships as white on transparent, so the tile supplies the green it
+  has to sit on - see src/components/Logo.jsx. Squared-off rounding rather
+  than a circle: the source is a square lockup and the palms reach its
+  corners, so a circle clips them.
+*/
+.logo-tile {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: var(--logo-size, 36px);
+  height: var(--logo-size, 36px);
+  border-radius: 24%;
+  background: var(--brand-green);
+  overflow: hidden;
+}
+
+.logo-tile img {
+  display: block;
+  width: 76%;
+  height: auto;
 }
 
 /* ── language switch ───────────────────────────────────────────── */

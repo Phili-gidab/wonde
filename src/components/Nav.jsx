@@ -1,6 +1,7 @@
 import { BRAND, CHAPTERS, UI } from '../content.js'
 import { PHONE_TEL } from '../contact.js'
 import { useLang } from '../i18n.jsx'
+import Logo from './Logo.jsx'
 
 /**
  * Fixed chrome: brand and language switch at the top, chapter index at the
@@ -18,6 +19,7 @@ export default function Nav({ chapter }) {
     <>
       <header className="nav">
         <a className="nav-brand" href="#arrival" onClick={goTo('arrival')}>
+          <Logo size={34} />
           <span className="nav-mark">{BRAND.mark}</span>
           <span className="nav-brand-am">{t(BRAND.name)}</span>
         </a>

@@ -1,6 +1,7 @@
 import { BRAND, UI } from '../content.js'
 import { PHONE, PHONE_TEL, WHATSAPP, TELEGRAM, AGENT, AGENT_EN } from '../contact.js'
 import { useLang } from '../i18n.jsx'
+import Logo from './Logo.jsx'
 
 export default function Footer() {
   const { t, other, lang } = useLang()
@@ -8,9 +9,12 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-grid">
-        <div>
-          <p className="footer-brand">{t(BRAND.name)}</p>
-          <p className="footer-brand-am">{other(BRAND.name)}</p>
+        <div className="footer-brand-block">
+          <Logo size={46} />
+          <div>
+            <p className="footer-brand">{t(BRAND.name)}</p>
+            <p className="footer-brand-am">{other(BRAND.name)}</p>
+          </div>
         </div>
 
         <div className="footer-contact">

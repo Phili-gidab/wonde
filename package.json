@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "model": "node scripts/model/geo.mjs && node scripts/model/tex.mjs && node scripts/model/pack.mjs"
+    "model": "node scripts/model/geo.mjs && node scripts/model/tex.mjs && node scripts/model/pack.mjs",
+    "media:logo": "node scripts/media/logo.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.122.0",
