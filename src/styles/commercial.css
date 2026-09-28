@@ -1,0 +1,179 @@
+/* ── commercial: shops ─────────────────────────────────────────── */
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.project {
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.project-name {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.project-alt {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.project-summary {
+  margin-top: 0.75rem;
+  color: var(--muted-fg);
+}
+
+.project-pitch {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--accent-bg);
+  font-weight: 500;
+}
+
+.project-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.project-facts div {
+  padding: 0.85rem;
+  border-radius: var(--radius);
+  background: var(--secondary);
+}
+
+.project-facts dt {
+  color: var(--muted-fg);
+  font-size: 0.78rem;
+}
+
+.project-facts dd {
+  font-weight: 700;
+}
+
+.project-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.project-features li {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.unit-table-wrap {
+  margin-top: 1.25rem;
+}
+
+.unit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.unit-table th {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 2px solid var(--fg);
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted-fg);
+}
+
+.unit-table td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.unit-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.unit-table th:nth-child(n + 3) {
+  text-align: right;
+}
+
+.unit-table-note {
+  margin-top: 0.6rem;
+  color: var(--muted-fg);
+  font-size: 0.8rem;
+}
+
+.commercial-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--accent-bg);
+}
+
+.commercial-cta p {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent-fg);
+}
+
+@media (max-width: 900px) {
+  .projects {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The table restacks into labelled rows on phones - no sideways scroll. */
+@media (max-width: 560px) {
+  .project-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .unit-table thead {
+    display: none;
+  }
+
+  .unit-table tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .unit-table td {
+    padding: 0;
+    border: 0;
+    text-align: left !important;
+  }
+
+  .unit-table td::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--muted-fg);
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+}

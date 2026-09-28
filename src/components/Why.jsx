@@ -1,5 +1,6 @@
 import { WHY } from '../content.js'
 import { useLang } from '../i18n.jsx'
+import SectionHead from './SectionHead.jsx'
 
 /**
  * Why choose Temer - the six advantages, as a card grid.
@@ -80,33 +81,26 @@ export default function Why() {
   const { t, other } = useLang()
 
   return (
-    <section className="why" id="why" aria-label={t(WHY.heading)}>
-      <div className="why-head">
-        <p className="eyebrow">
-          {t(WHY.eyebrow)}
-          <span className="eyebrow-am">{other(WHY.eyebrow)}</span>
-        </p>
+    <section className="section why" id="why">
+      <div className="container">
+        <SectionHead eyebrow={WHY.eyebrow} heading={WHY.heading} body={WHY.body} />
 
-        <h2>{t(WHY.heading)}</h2>
-        <p className="why-am">{other(WHY.heading)}</p>
-        <p className="why-body">{t(WHY.body)}</p>
+        <ul className="why-grid">
+          {WHY.items.map((item) => (
+            <li className="why-card" key={item.id}>
+              <span className="why-chip">
+                <Icon name={item.icon} />
+              </span>
+
+              <h3 className="why-title">{t(item.title)}</h3>
+              {/* Same trick as every heading on the page: whichever language you
+                  are reading, the other one sits under it. */}
+              <p className="why-title-am">{other(item.title)}</p>
+              <p className="why-text">{t(item.body)}</p>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      <ul className="why-grid">
-        {WHY.items.map((item) => (
-          <li className="why-card" key={item.id}>
-            <span className="why-chip">
-              <Icon name={item.icon} />
-            </span>
-
-            <h3 className="why-title">{t(item.title)}</h3>
-            {/* Same trick as every heading on the page: whichever language you
-                are reading, the other one sits under it. */}
-            <p className="why-title-am">{other(item.title)}</p>
-            <p className="why-text">{t(item.body)}</p>
-          </li>
-        ))}
-      </ul>
     </section>
   )
 }

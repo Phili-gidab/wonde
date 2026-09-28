@@ -11,7 +11,7 @@
  * Two renditions, because one cannot serve both ends of the size range. Below
  * roughly 64px the "Temer PROPERTIES" wordmark inside the lockup turns to
  * mush, so small placements get `mark` (the palms and towers alone) and the
- * name is carried by the text beside it. `lockup` is for the loader, where
+ * name is carried by the text beside it. `lockup` is for larger placements, where
  * there is room for it to be read.
  *
  * Decorative in every current placement - the brand name is always set in

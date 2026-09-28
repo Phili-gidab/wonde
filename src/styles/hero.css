@@ -1,0 +1,101 @@
+/* ── hero: photo, dark grade, centred copy ─────────────────────── */
+
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: min(92svh, 56rem);
+  padding: calc(var(--nav-h) + 3rem) 0 4rem;
+  overflow: hidden;
+  color: #fff;
+  background: var(--primary-deep);
+}
+
+.hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, 0.45) 45%,
+    rgba(0, 0, 0, 0.78)
+  );
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 58rem;
+  padding: 0 var(--gutter);
+  text-align: center;
+}
+
+.hero-badge {
+  margin-bottom: 1.5rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(58, 125, 68, 0.6);
+  background: rgba(58, 125, 68, 0.3);
+  backdrop-filter: blur(8px);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(2.3rem, 7vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  white-space: pre-line;
+  text-wrap: balance;
+}
+
+.hero-accent {
+  margin-top: 0.9rem;
+  color: var(--primary-light);
+  font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+  font-weight: 600;
+}
+
+.hero-body {
+  max-width: 40rem;
+  margin: 1.25rem 0 2.25rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  text-wrap: pretty;
+}
+
+.hero .contact-links {
+  justify-content: center;
+}
+
+.hero-more {
+  margin-top: 1.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.2s;
+}
+
+.hero-more:hover {
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .hero-inner .contact-links {
+    width: 100%;
+  }
+}

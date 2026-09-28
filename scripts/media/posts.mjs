@@ -6,7 +6,7 @@
  *
  * post-01..04 are finished buildings and are rendered by Delivered.jsx, at
  * full size and in full colour. post-05..09 are the running offers and are
- * rendered by Feed.jsx, in the listings strip.
+ * rendered by Listings.jsx, one under another.
  *
  * Two deliberate choices here:
  *

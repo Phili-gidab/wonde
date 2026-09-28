@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
  * resolves one against the active language; `other()` resolves the opposite
  * one, which is what drives the accent line under each heading. That is the
  * whole trick behind the bilingual typography: whichever language you are
- * reading, the other one sits under it in amber as a display accent, so the
+ * reading, the other one sits under it in green as a display accent, so the
  * page never looks like a translation of itself.
  *
  * The choice is persisted, because someone who switches to Amharic once should

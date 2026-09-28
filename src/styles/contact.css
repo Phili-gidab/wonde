@@ -1,0 +1,138 @@
+/* ── contact band ──────────────────────────────────────────────── */
+
+.section.contact {
+  background: var(--primary-deep);
+  color: #fff;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact .eyebrow {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.contact .section-accent {
+  color: var(--primary-light);
+}
+
+.contact .section-body {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.agent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.agent-name {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.agent-alt {
+  color: var(--primary-light);
+  font-weight: 600;
+}
+
+.agent-role {
+  width: 100%;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9rem;
+}
+
+.contact .cl-phone {
+  background: #fff;
+  border-color: #fff;
+  color: var(--primary-deep);
+  box-shadow: none;
+}
+
+.contact .cl-phone:hover {
+  background: var(--accent-bg);
+}
+
+/* ── footer ────────────────────────────────────────────────────── */
+
+.footer {
+  padding: 3.5rem 0 1.5rem;
+  background: #111814;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.4fr;
+  align-items: start;
+  gap: 2.5rem;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.footer-name {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.footer-alt {
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 0.5rem 2rem;
+  align-content: start;
+}
+
+.footer-links a:hover {
+  color: #fff;
+}
+
+.footer-agent {
+  margin-bottom: 0.9rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.footer .cl {
+  min-height: 2.8rem;
+  padding: 0 1rem;
+  font-size: 0.9rem;
+}
+
+.footer .cl-whatsapp,
+.footer .cl-telegram {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.footer-legal {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

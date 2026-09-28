@@ -1,17 +1,10 @@
-import { PHONE, PHONE_TEL } from '../contact.js'
-import { UI } from '../content.js'
-import { useLang } from '../i18n.jsx'
-import PhoneIcon from './PhoneIcon.jsx'
+import ContactLinks from './ContactLinks.jsx'
 
-/** Persistent call affordance on small screens, where the rail is hidden. */
+/** Persistent contact bar on phones: call, WhatsApp and Telegram. */
 export default function CallBar() {
-  const { t } = useLang()
-
   return (
-    <a className="call-bar" href={PHONE_TEL}>
-      <PhoneIcon size={18} />
-      <span className="call-bar-label">{t(UI.callWonde)}</span>
-      <span className="call-bar-num">{PHONE}</span>
-    </a>
+    <div className="call-bar">
+      <ContactLinks variant="bar" showNumber={false} />
+    </div>
   )
 }

@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { DELIVERED, UI } from '../content.js'
 import { useLang } from '../i18n.jsx'
-import Chevron from './Chevron.jsx'
+import { Chevron } from './icons.jsx'
+import SectionHead from './SectionHead.jsx'
 
 /**
  * The delivery gallery - buildings already finished and handed over.
@@ -12,11 +13,8 @@ import Chevron from './Chevron.jsx'
  * colour, and clicking one opens it full size with its floors, built-up area
  * and location beside it.
  *
- * The lightbox is the same native <dialog> and the same `lb-*` classes as the
- * listings carousel. That is deliberate: two galleries on one page that open
- * two different-looking overlays reads as two different websites, and reusing
- * the markup means the focus trapping, Escape handling and backdrop are
- * already solved in one place.
+ * The lightbox is a native <dialog>, which gives focus trapping, Escape
+ * handling and the backdrop for free; only left/right stepping is added.
  *
  * The images are Wonde's own, each with a green badge burned into its lower
  * left carrying the name, location and built-up area. They arrive in three
@@ -29,7 +27,14 @@ function Site({ site, onOpen }) {
 
   return (
     <figure className="built">
-      <button type="button" className="built-open" onClick={onOpen}>
+      {/* Only the photograph is the button; the caption stays outside it so
+          the heading is a real heading and the button's name stays short. */}
+      <button
+        type="button"
+        className="built-open"
+        onClick={onOpen}
+        aria-label={`${site.name} - ${t(UI.viewLarger)}`}
+      >
         <span className="built-media">
           <img
             src={`/posts/${site.id}.webp`}
@@ -41,29 +46,29 @@ function Site({ site, onOpen }) {
           />
           <span className="built-kind">{t(UI.handedOver)}</span>
         </span>
-
-        <figcaption className="built-meta">
-          <h3 className="built-name">{site.name}</h3>
-
-          <p className="built-place">
-            {t(site.place)}
-            <span className="built-place-am">{other(site.place)}</span>
-          </p>
-
-          <p className="built-spec">
-            <span>{site.spec}</span>
-            <span className="built-area">{site.area}</span>
-          </p>
-
-          <p className="built-note">{t(site.note)}</p>
-        </figcaption>
       </button>
+
+      <figcaption className="built-meta">
+        <h3 className="built-name">{site.name}</h3>
+
+        <p className="built-place">
+          {t(site.place)}
+          <span className="built-place-am">{other(site.place)}</span>
+        </p>
+
+        <p className="built-spec">
+          <span>{site.spec}</span>
+          <span className="built-area">{site.area}</span>
+        </p>
+
+        <p className="built-note">{t(site.note)}</p>
+      </figcaption>
     </figure>
   )
 }
 
 export default function Delivered() {
-  const { t, other } = useLang()
+  const { t } = useLang()
   const dialog = useRef(null)
   const [current, setCurrent] = useState(null)
 
@@ -80,31 +85,24 @@ export default function Delivered() {
   const site = current !== null ? sites[current] : null
 
   return (
-    <section className="delivered" id="delivered" aria-label={t(DELIVERED.eyebrow)}>
-      <div className="delivered-head">
-        <p className="eyebrow">
-          {t(DELIVERED.eyebrow)}
-          <span className="eyebrow-am">{other(DELIVERED.eyebrow)}</span>
-        </p>
+    <section className="section delivered" id="delivered">
+      <div className="container">
+        <SectionHead eyebrow={DELIVERED.eyebrow} heading={DELIVERED.heading} body={DELIVERED.body}>
+          <dl className="delivered-stats">
+            {DELIVERED.stats.map((stat) => (
+              <div key={stat.value}>
+                <dt>{stat.value}</dt>
+                <dd>{t(stat.label)}</dd>
+              </div>
+            ))}
+          </dl>
+        </SectionHead>
 
-        <h2>{t(DELIVERED.heading)}</h2>
-        <p className="delivered-am">{other(DELIVERED.heading).replace('\n', ' ')}</p>
-        <p className="delivered-body">{t(DELIVERED.body)}</p>
-
-        <dl className="delivered-stats">
-          {DELIVERED.stats.map((stat) => (
-            <div key={stat.value}>
-              <dt>{stat.value}</dt>
-              <dd>{t(stat.label)}</dd>
-            </div>
+        <div className="delivered-grid">
+          {sites.map((item, index) => (
+            <Site key={item.id} site={item} onOpen={() => openAt(index)} />
           ))}
-        </dl>
-      </div>
-
-      <div className="delivered-grid">
-        {sites.map((item, index) => (
-          <Site key={item.id} site={item} onOpen={() => openAt(index)} />
-        ))}
+        </div>
       </div>
 
       <dialog

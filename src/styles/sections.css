@@ -1,0 +1,235 @@
+/* ── offer: 4.6 million, under the listings ────────────────────── */
+
+.offer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.offer-card .section-title {
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+}
+
+.offer-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 52rem;
+  margin-bottom: 2.5rem;
+}
+
+.offer-stat {
+  padding: 1.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.offer-stat dt {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.offer-stat dd {
+  margin-top: 0.6rem;
+  font-weight: 600;
+}
+
+.offer-stat dd span {
+  display: block;
+  color: var(--muted-fg);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+@media (max-width: 560px) {
+  .offer-stats {
+    gap: 0.5rem;
+  }
+
+  .offer-stat {
+    padding: 1.25rem 0.4rem;
+  }
+
+  .offer-stat dd {
+    font-size: 0.85rem;
+  }
+}
+
+/* ── pillars: homes and shops ──────────────────────────────────── */
+
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.pillar {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.pillar-kind {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.pillar-lead {
+  margin-top: 0.4rem;
+  color: var(--muted-fg);
+}
+
+.pillar-figures {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.pillar-figures div {
+  padding: 0.9rem;
+  border-radius: var(--radius);
+  background: var(--secondary);
+}
+
+.pillar-figures dt {
+  color: var(--muted-fg);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.pillar-figures dd {
+  margin-top: 0.15rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.pillar-sites {
+  flex: 1;
+  border-top: 1px solid var(--border);
+}
+
+.pillar-sites li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pillar-site-name {
+  font-weight: 600;
+}
+
+.pillar-site-size {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-fg);
+  font-size: 0.9rem;
+}
+
+.pillar-site-note {
+  grid-column: 1 / -1;
+  color: var(--primary);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.pillar-cta {
+  align-self: flex-start;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  transition: background 0.2s;
+}
+
+.pillar-cta:hover {
+  background: var(--primary-hover);
+}
+
+@media (max-width: 860px) {
+  .pillars-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .pillar-figures {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── why choose Temer ──────────────────────────────────────────── */
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.why-card {
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.why-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.why-chip {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.1rem;
+  border-radius: var(--radius);
+  background: var(--accent-bg);
+  color: var(--primary);
+}
+
+.why-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.why-title-am {
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.why-text {
+  margin-top: 0.6rem;
+  color: var(--muted-fg);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 960px) {
+  .why-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .why-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

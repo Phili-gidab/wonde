@@ -1,80 +1,120 @@
-import { BRAND, CHAPTERS, UI } from '../content.js'
-import { PHONE_TEL } from '../contact.js'
+import { useEffect, useState } from 'react'
+import { BRAND, NAV, UI } from '../content.js'
 import { useLang } from '../i18n.jsx'
 import Logo from './Logo.jsx'
+import ContactLinks from './ContactLinks.jsx'
 
 /**
- * Fixed chrome: brand and language switch at the top, chapter index at the
- * right. The index doubles as navigation - clicking scrolls to that chapter.
+ * Sticky header. Transparent over the hero photo, solid white once the page
+ * scrolls - the same behaviour as temerpropertiessales.com. On phones the
+ * links fold into a menu; the contact buttons live in the bottom call bar.
  */
-export default function Nav({ chapter }) {
-  const { t, other, lang, setLang } = useLang()
+function LangSwitch() {
+  const { lang, setLang } = useLang()
 
-  const goTo = (id) => (event) => {
-    event.preventDefault()
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  return (
+    <div className="lang" role="group" aria-label="Language">
+      <button
+        type="button"
+        className={lang === 'en' ? 'is-active' : ''}
+        aria-pressed={lang === 'en'}
+        onClick={() => setLang('en')}
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        className={lang === 'am' ? 'is-active' : ''}
+        aria-pressed={lang === 'am'}
+        onClick={() => setLang('am')}
+        lang="am"
+      >
+        አማ
+      </button>
+    </div>
+  )
+}
+
+export default function Nav() {
+  const { t } = useLang()
+  const [solid, setSolid] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setSolid(window.scrollY > 40)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    if (!open) return
+    document.body.classList.add('menu-open')
+
+    // Close on Escape, and when the window grows past the menu breakpoint -
+    // otherwise the hamburger hides while the page stays scroll-locked.
+    const onKey = (event) => event.key === 'Escape' && setOpen(false)
+    const wide = window.matchMedia('(min-width: 1181px)')
+    const onWide = (event) => event.matches && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    wide.addEventListener('change', onWide)
+
+    return () => {
+      document.body.classList.remove('menu-open')
+      window.removeEventListener('keydown', onKey)
+      wide.removeEventListener('change', onWide)
+    }
+  }, [open])
+
+  const close = () => setOpen(false)
 
   return (
     <>
-      <header className="nav">
-        <a className="nav-brand" href="#arrival" onClick={goTo('arrival')}>
-          <Logo size={34} />
-          <span className="nav-mark">{BRAND.mark}</span>
-          <span className="nav-brand-am">{t(BRAND.name)}</span>
-        </a>
+      <header className={`nav${solid || open ? ' is-solid' : ''}`}>
+        <div className="nav-inner">
+          <a className="nav-brand" href="#top" onClick={close}>
+            <Logo size={36} />
+            <span className="nav-mark">{BRAND.mark}</span>
+          </a>
 
-        <div className="nav-right">
-          {/*
-            A two-state switch rather than a dropdown: there are exactly two
-            languages, and each is labelled in its own script so it is legible
-            to someone who cannot read the other.
-          */}
-          <div className="lang" role="group" aria-label="Language">
+          <nav className="nav-links" aria-label={t(UI.mainNav)}>
+            {NAV.map((item) => (
+              <a key={item.id} href={`#${item.id}`}>
+                {t(item.label)}
+              </a>
+            ))}
+          </nav>
+
+          <div className="nav-right">
+            <LangSwitch />
+            <div className="nav-contact">
+              <ContactLinks variant="compact" />
+            </div>
             <button
               type="button"
-              className={lang === 'en' ? 'is-active' : ''}
-              aria-pressed={lang === 'en'}
-              onClick={() => setLang('en')}
+              className={`nav-toggle${open ? ' is-open' : ''}`}
+              aria-expanded={open}
+              aria-controls="nav-menu"
+              aria-label={t(UI.menu)}
+              onClick={() => setOpen((v) => !v)}
             >
-              EN
-            </button>
-            <span className="lang-sep" aria-hidden="true" />
-            <button
-              type="button"
-              className={lang === 'am' ? 'is-active' : ''}
-              aria-pressed={lang === 'am'}
-              onClick={() => setLang('am')}
-              lang="am"
-            >
-              አማ
+              <span />
+              <span />
+              <span />
             </button>
           </div>
-
-          <a className="nav-call" href={PHONE_TEL}>
-            <span className="nav-call-dot" />
-            {t(UI.callWonde)}
-          </a>
         </div>
       </header>
 
-      <nav className="rail" aria-label={t(UI.chapters)}>
-        <ol>
-          {CHAPTERS.map((item, index) => (
-            <li key={item.id} className={index === chapter ? 'is-active' : ''}>
-              <a href={`#${item.id}`} onClick={goTo(item.id)}>
-                <span className="rail-no">{item.no}</span>
-                <span className="rail-label">{t(item.label)}</span>
-              </a>
-            </li>
-          ))}
-        </ol>
+      {/* Outside <header> on purpose: the header's backdrop-filter would
+          otherwise become the containing block for this fixed panel. */}
+      <nav id="nav-menu" className={`nav-menu${open ? ' is-open' : ''}`} aria-label={t(UI.menu)}>
+        {NAV.map((item) => (
+          <a key={item.id} href={`#${item.id}`} onClick={close}>
+            {t(item.label)}
+          </a>
+        ))}
       </nav>
-
-      <div className="scroll-hint" aria-hidden="true">
-        <span>{t(UI.scroll)}</span>
-        <span className="scroll-hint-line" />
-      </div>
     </>
   )
 }

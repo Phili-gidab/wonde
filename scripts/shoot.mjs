@@ -1,106 +1,54 @@
 /**
- * Render check. Loads the built site in headless Chromium, waits for the model
- * to finish loading, then screenshots the page at each chapter's scroll
- * position and reports any console errors or failed requests.
+ * Page check. Loads the built site in headless Chromium at desktop and phone
+ * widths, saves a full-page screenshot of each, and fails on console errors,
+ * failed requests or any horizontal overflow.
  *
  * Usage:
- *   npm run preview          # in one terminal
- *   node scripts/shoot.mjs   # in another
- *
- * WebGL in headless needs a software rasteriser, hence the SwiftShader flags.
+ *   npm run build && npm run preview   # in one terminal
+ *   node scripts/shoot.mjs             # in another
  */
 import { chromium } from 'playwright'
 import { mkdir } from 'node:fs/promises'
 
 const URL = process.env.URL ?? 'http://localhost:4173/'
 const OUT = 'shots'
-// Kept low deliberately: under software rendering each capture costs ~40s.
-const SHOTS = Number(process.env.SHOTS ?? 5)
 const VIEWPORTS = [
-  { name: 'desktop', width: 1600, height: 900 },
-  { name: 'mobile', width: 390, height: 844 },
+  { name: 'desktop', width: 1440, height: 900 },
+  { name: 'phone', width: 390, height: 844, isMobile: true, hasTouch: true },
 ]
 
 await mkdir(OUT, { recursive: true })
-
-const browser = await chromium.launch({
-  args: [
-    '--use-gl=angle',
-    '--use-angle=swiftshader',
-    '--enable-unsafe-swiftshader',
-    '--ignore-gpu-blocklist',
-  ],
-})
-
+const browser = await chromium.launch()
 let failed = false
 
-for (const viewport of VIEWPORTS) {
-  const page = await browser.newPage({
-    viewport: { width: viewport.width, height: viewport.height },
-    deviceScaleFactor: 1,
+for (const { name, ...viewport } of VIEWPORTS) {
+  const page = await browser.newPage({ viewport, isMobile: viewport.isMobile, hasTouch: viewport.hasTouch })
+  const problems = []
+  page.on('console', (msg) => msg.type() === 'error' && problems.push(`console: ${msg.text()}`))
+  // Ad beacons are routinely refused in headless; they are not our requests.
+  page.on('requestfailed', (req) => {
+    if (!/google|doubleclick/.test(req.url())) problems.push(`request: ${req.url()}`)
   })
 
-  const errors = []
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text())
-  })
-  page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`))
-  page.on('requestfailed', (request) =>
-    errors.push(`requestfailed: ${request.url()} ${request.failure()?.errorText}`),
-  )
-
-  await page.goto(URL, { waitUntil: 'networkidle', timeout: 90_000 })
-
-  // Wait for the load curtain to clear, which only happens once the GLB is in.
-  await page
-    .waitForSelector('.loader.is-hidden', { timeout: 90_000 })
-    .catch(() => errors.push('loader never hid - model likely failed to load'))
-
-  // Confirm a WebGL context actually exists and is drawing.
-  const canvasInfo = await page.evaluate(() => {
-    const canvas = document.querySelector('canvas')
-    if (!canvas) return { ok: false, reason: 'no canvas element' }
-    const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl')
-    return {
-      ok: Boolean(gl),
-      reason: gl ? 'ok' : 'no webgl context',
-      width: canvas.width,
-      height: canvas.height,
-      renderer: gl?.getParameter(gl.RENDERER) ?? null,
+  await page.goto(URL, { waitUntil: 'networkidle' })
+  // Walk the page so lazy images load before the full-page capture.
+  await page.evaluate(async () => {
+    for (let y = 0; y < document.body.scrollHeight; y += 600) {
+      window.scrollTo(0, y)
+      await new Promise((r) => setTimeout(r, 60))
     }
+    window.scrollTo(0, 0)
   })
+  await page.waitForLoadState('networkidle')
 
-  console.log(`\n[${viewport.name}] canvas:`, JSON.stringify(canvasInfo))
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+  if (overflow > 0) problems.push(`horizontal overflow: ${overflow}px`)
 
-  const height = await page.evaluate(() => document.documentElement.scrollHeight)
-
-  for (let i = 0; i < SHOTS; i++) {
-    const y = Math.round((height - viewport.height) * (i / (SHOTS - 1)))
-    await page.evaluate((top) => window.scrollTo({ top, behavior: 'instant' }), y)
-    // let the camera damping settle and reveals finish
-    await page.waitForTimeout(1400)
-    // Do NOT pass `animations: 'disabled'` here. It makes Playwright wait for
-    // animations to settle, and with the composer's MSAA under software
-    // rendering the page never produces frames fast enough - the capture just
-    // times out. The default ('allow') screenshots immediately.
-    await page.screenshot({
-      path: `${OUT}/${viewport.name}-${i}.png`,
-      caret: 'hide',
-      timeout: 60_000,
-    })
-  }
-
-  if (errors.length) {
-    failed = true
-    console.log(`[${viewport.name}] ${errors.length} problem(s):`)
-    for (const error of [...new Set(errors)].slice(0, 12)) console.log('   -', error)
-  } else {
-    console.log(`[${viewport.name}] no console errors`)
-  }
-
+  await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: true })
+  console.log(`${name}: ${problems.length ? problems.join('; ') : 'ok'}`)
+  if (problems.length) failed = true
   await page.close()
 }
 
 await browser.close()
-console.log(`\nscreenshots -> ${OUT}/`)
 process.exit(failed ? 1 : 0)

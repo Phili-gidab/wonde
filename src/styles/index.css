@@ -1,0 +1,16 @@
+/*
+  Temer Real Estate - a plain scrolling page.
+
+  Styling follows temerpropertiessales.com: white page, one green
+  (#3a7d44), Playfair Display for headings over Plus Jakarta Sans, 12px
+  radii, and a dark-graded photo hero. Ethiopic glyphs fall through to the
+  Noto Ethiopic faces in each stack.
+*/
+@import './base.css';
+@import './nav.css';
+@import './hero.css';
+@import './listings.css';
+@import './sections.css';
+@import './delivered.css';
+@import './commercial.css';
+@import './contact.css';

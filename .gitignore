@@ -3,11 +3,7 @@ dist/
 .vercel/
 *.local
 
-# Source + intermediate 3D models (see README "3D model pipeline").
-# The built artefact public/models/tower.glb IS committed - it ships to prod.
-models-src/
-
-# Render-check output from scripts/shoot.mjs
+# Page-check output from scripts/shoot.mjs
 shots/
 
 # Original social-post images. Processed into public/posts/ by

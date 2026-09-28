@@ -3,7 +3,7 @@
  *   media-src/temer_logo.jpg  ->  logo-mark.webp, logo-lockup.webp, favicon.png, og.jpg
  *
  * The source sits in the gitignored `media-src/`, like the post photographs
- * and the source GLB - only the generated assets in `public/` are committed,
+ * - only the generated assets in `public/` are committed,
  * and only they ship. Leaving the original in `public/` published a 39 KB JPEG
  * that nothing on the page ever requested.
  *
@@ -27,7 +27,7 @@
  *    stair-stepped cutout, which matters at 32px.
  *
  * 3. The mark sits high in the square and the wordmark is small, so one
- *    rendition cannot serve both a 32px favicon and a 96px loader. The mark
+ *    rendition cannot serve both a 32px favicon and a large lockup. The mark
  *    alone is cut for small sizes - below about 64px the wordmark is mush -
  *    and the full lockup is kept for where there is room.
  */
@@ -141,7 +141,7 @@ await sharp({ create: { width: 1200, height: 630, channels: 3, background: green
   .toFile('public/og.jpg')
 
 // The green is not written to a file - it is pasted into `--brand-green` in
-// src/index.css, where it belongs. This log is how you get it after a source
+// src/styles/base.css, where it belongs. This log is how you get it after a source
 // swap; the token is the single place the value actually lives.
 console.log('brand green sampled from the source background:', green)
 console.log('wrote logo-mark.webp, logo-lockup.webp, favicon.png, og.jpg')

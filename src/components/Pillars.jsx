@@ -1,5 +1,6 @@
 import { PILLARS, UI } from '../content.js'
 import { useLang } from '../i18n.jsx'
+import SectionHead from './SectionHead.jsx'
 
 /**
  * The two things Temer sells, given equal weight.
@@ -44,19 +45,16 @@ function Pillar({ item }) {
 }
 
 export default function Pillars() {
-  const { t } = useLang()
-
   return (
-    <section className="pillars" id="pillars" aria-label={t(PILLARS.heading)}>
-      <div className="pillars-head">
-        <p className="eyebrow">{t(PILLARS.eyebrow)}</p>
-        <h2>{t(PILLARS.heading)}</h2>
-      </div>
+    <section className="section pillars" id="pillars">
+      <div className="container">
+        <SectionHead eyebrow={PILLARS.eyebrow} heading={PILLARS.heading} />
 
-      <div className="pillars-grid">
-        {PILLARS.items.map((item) => (
-          <Pillar key={item.id} item={item} />
-        ))}
+        <div className="pillars-grid">
+          {PILLARS.items.map((item) => (
+            <Pillar key={item.id} item={item} />
+          ))}
+        </div>
       </div>
     </section>
   )
