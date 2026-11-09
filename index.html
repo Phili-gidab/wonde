@@ -6,20 +6,19 @@
     <meta name="theme-color" content="#ffffff" />
 
     <!--
-      Google Ads tags (gtag.js): AW-18407581580 and AW-18526184031. One gtag.js
-      load serves both; each account gets its own config line.
+      Google Ads tag (gtag.js), AW-18526184031. It replaces AW-18407581580.
 
       It sits high in the head on purpose, and it is not gated to production:
       a hostname guard would keep a handful of localhost page views out of the
       account, but it would also stop Tag Assistant firing during development,
       which is the worse trade.
 
-      The Contact conversion for AW-18526184031 is not fired here. Google's
-      snippet fires it on page load, which on a one-page site would count every
-      visitor as a contact. It is fired from the phone, WhatsApp and Telegram
-      links instead - see ContactLinks.jsx.
+      The Contact conversion is not fired here. Google's snippet fires it on
+      page load, which on a one-page site would count every visitor as a
+      contact. It is fired from the phone, WhatsApp and Telegram links instead -
+      see ContactLinks.jsx.
     -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18407581580"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18526184031"></script>
     <script>
       window.dataLayer = window.dataLayer || []
       function gtag() {
@@ -27,7 +26,6 @@
       }
       gtag('js', new Date())
 
-      gtag('config', 'AW-18407581580')
       gtag('config', 'AW-18526184031')
     </script>
     <link rel="icon" href="/favicon.png" type="image/png" sizes="180x180" />
