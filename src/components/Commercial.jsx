@@ -2,6 +2,7 @@ import { COMMERCIAL, UI } from '../content.js'
 import { useLang } from '../i18n.jsx'
 import SectionHead from './SectionHead.jsx'
 import ContactLinks from './ContactLinks.jsx'
+import ShopPlan from './ShopPlan.jsx'
 
 /** Per-unit price table for the Kaliti mall. */
 function UnitTable({ units }) {
@@ -89,6 +90,8 @@ export default function Commercial() {
     <section className="section commercial" id="commercial">
       <div className="container">
         <SectionHead eyebrow={COMMERCIAL.eyebrow} heading={COMMERCIAL.heading} body={COMMERCIAL.body} />
+
+        <ShopPlan />
 
         <div className="projects">
           {COMMERCIAL.projects.map((project) => (

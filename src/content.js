@@ -225,9 +225,9 @@ export const COMMERCIAL = {
   heading: { en: 'Own a shop.', am: 'የሱቅ ባለቤት ይሁኑ።' },
   body: {
     en:
-      'Two retail developments now selling. 10% off for buyers paying 100% up ' +
-      'front on either.',
-    am: 'ሁለት የንግድ ፕሮጀክቶች በሽያጭ ላይ። ሙሉ ክፍያ ለሚፈጽሙ 10% ቅናሽ።',
+      'Shops at Sarbet, Bulgaria and Gelan on 1% a month, and the Piyassa ' +
+      'retail centre on ten interest-free instalments.',
+    am: 'በሳርቤት፣ በቡልጋሪያ እና በገላን በወር 1% የሚከፈል ሱቅ፤ በፒያሳ ደግሞ በ10 ክፍያ ያለ ወለድ።',
   },
 
   projects: [
@@ -283,10 +283,6 @@ export const COMMERCIAL = {
         {
           en: 'Six sites already built and handed over. This one is in central Kaliti (Gelan).',
           am: '6 ሳይቶችን ሰርተን አስረክበናል። ይህኛው መሀል ቃሊቲ (ገላን) ላይ ነው።',
-        },
-        {
-          en: '10% off for buyers paying 100% up front.',
-          am: '100% ለሚከፍሉ 10% ቅናሽ።',
         },
       ],
       name: { en: 'Kaliti - Gelan', am: 'ቃሊቲ (ገላን)' },
@@ -366,15 +362,17 @@ export const PILLARS = {
       id: 'shops',
       kind: { en: 'Shops', am: 'ሱቆች' },
       lead: {
-        en: 'Retail units in two developments, sold per floor with interest-free terms.',
-        am: 'በሁለት ፕሮጀክቶች ውስጥ ሱቆች፤ በፎቅ የሚሸጡ፣ ያለ ወለድ ክፍያ።',
+        en: 'Shops at four sites: 1% a month at three of them, interest-free at Piyassa.',
+        am: 'በአራት ሳይቶች ሱቆች፤ በሶስቱ በወር 1%፣ በፒያሳ ያለ ወለድ።',
       },
       figures: [
         { k: { en: 'Sizes', am: 'ስፋት' }, v: '16 - 27 m²' },
-        { k: { en: 'From', am: 'ከ' }, v: { en: '500,000 birr down', am: '500,000 ብር ቅድመ ክፍያ' } },
-        { k: { en: 'Full payment', am: 'ሙሉ ክፍያ' }, v: { en: '10% off', am: '10% ቅናሽ' } },
+        { k: { en: 'Monthly', am: 'በወር' }, v: { en: '1% for 24 months', am: '1% ለ24 ወራት' } },
+        { k: { en: 'Discount', am: 'ቅናሽ' }, v: { en: 'up to 30%', am: 'እስከ 30%' } },
       ],
       sites: [
+        { name: { en: 'Sarbet · City Plus', am: 'ሳርቤት · City Plus' }, size: '25% down', note: { en: '1% a month', am: 'በወር 1%' } },
+        { name: { en: 'Bulgaria · Ajwa Shop', am: 'ቡልጋሪያ · Ajwa Shop' }, size: '25% down', note: { en: '1% a month', am: 'በወር 1%' } },
         {
           name: { en: 'Piyassa - Adwa Museum', am: 'መሃል ፒያሳ · አድዋ ሙዝየም' },
           size: '2B + G+5',
@@ -383,7 +381,7 @@ export const PILLARS = {
         {
           name: { en: 'Kaliti - Gelan', am: 'ቃሊቲ (ገላን)' },
           size: 'G+4',
-          note: { en: 'Per-floor pricing', am: 'በፎቅ ዋጋ' },
+          note: { en: '1% a month', am: 'በወር 1%' },
         },
       ],
       href: '#commercial',
@@ -392,3 +390,4 @@ export const PILLARS = {
 }
 
 export { DELIVERED, POSTS } from './posts.js'
+export { SHOP_PLAN } from './shopPlan.js'
