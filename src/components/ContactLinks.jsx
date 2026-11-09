@@ -1,4 +1,4 @@
-import { PHONE, PHONE_TEL, WHATSAPP, TELEGRAM } from '../contact.js'
+import { PHONE, PHONE_TEL, WHATSAPP, TELEGRAM, reportContact } from '../contact.js'
 import { UI } from '../content.js'
 import { useLang } from '../i18n.jsx'
 import { PhoneIcon, WhatsAppIcon, TelegramIcon } from './icons.jsx'
@@ -17,13 +17,14 @@ export default function ContactLinks({ variant = 'solid', showNumber = true }) {
 
   return (
     <div className={`contact-links contact-links-${variant}`}>
-      <a className="cl cl-phone" href={PHONE_TEL}>
+      <a className="cl cl-phone" href={PHONE_TEL} onClick={reportContact}>
         <PhoneIcon size={iconSize} />
         <span className="cl-label">{showNumber ? PHONE : t(UI.callNow)}</span>
       </a>
       <a
         className="cl cl-whatsapp"
         href={WHATSAPP}
+        onClick={reportContact}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={compact ? `WhatsApp ${t(UI.newTab)}` : undefined}
@@ -35,6 +36,7 @@ export default function ContactLinks({ variant = 'solid', showNumber = true }) {
       <a
         className="cl cl-telegram"
         href={TELEGRAM}
+        onClick={reportContact}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={compact ? `Telegram ${t(UI.newTab)}` : undefined}
